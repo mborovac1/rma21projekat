@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.models.Kviz
 import java.text.SimpleDateFormat
+import java.util.*
 
 class KvizListAdapter(
         private var kvizovi: List<Kviz>
@@ -29,18 +30,41 @@ class KvizListAdapter(
         else
             holder.bodoviKviza.text = ""
 
-        // datum kviza
-        val datum = kvizovi[position].datumPocetka
-        val formatter = SimpleDateFormat("dd.MM.yyyy")
-        val date = formatter.format(datum)
-
-        holder.datumKviza.text = date
+        // trajanje
         holder.vrijemeKviza.text = kvizovi[position].trajanje.toString() + " min"
 
-        // status kviza
+        // format za datum kviza
+        val formatter = SimpleDateFormat("dd.MM.yyyy")
+
+        // status i datum kviza
+        var bojaMatch = ""
+        val danasnjiDatum: Date = Calendar.getInstance().time
+
+        if (kvizovi[position].osvojeniBodovi != null) {
+            bojaMatch = "plava"
+            val datum = kvizovi[position].datumRada
+            holder.datumKviza.text = formatter.format(datum)
+        }
+        else if (kvizovi[position].datumPocetka.before(danasnjiDatum) &&
+                 kvizovi[position].datumKraj.after(danasnjiDatum)) {
+            bojaMatch = "zelena"
+            val datum = kvizovi[position].datumKraj
+            holder.datumKviza.text = formatter.format(datum)
+        }
+        else if (kvizovi[position].datumPocetka.after(danasnjiDatum)) {
+            bojaMatch = "zuta"
+            val datum = kvizovi[position].datumPocetka
+            holder.datumKviza.text = formatter.format(datum)
+        }
+        else if (kvizovi[position].datumPocetka.before(danasnjiDatum) &&
+                 kvizovi[position].datumKraj.before(danasnjiDatum) &&
+                 kvizovi[position].datumRada == null) {
+            bojaMatch = "crvena"
+            val datum = kvizovi[position].datumKraj
+            holder.datumKviza.text = formatter.format(datum)
+        }
+
         val context: Context = holder.statusPredmeta.context
-        // DODATI PROVJERU
-        val bojaMatch: String = "zuta"
         var id: Int = context.resources.getIdentifier(bojaMatch, "drawable", context.packageName)
         holder.statusPredmeta.setImageResource(id)
     }
@@ -48,7 +72,7 @@ class KvizListAdapter(
     override fun getItemCount(): Int = kvizovi.size
 
     fun updateKvizovi(kvizovi: List<Kviz>) {
-        this.kvizovi = kvizovi
+        this.kvizovi = kvizovi.sortedBy { kviz -> kviz.datumPocetka }
         notifyDataSetChanged()
     }
 

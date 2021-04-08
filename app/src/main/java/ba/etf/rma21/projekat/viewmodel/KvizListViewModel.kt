@@ -5,6 +5,6 @@ import ba.etf.rma21.projekat.data.repositories.KvizRepository
 
 class KvizListViewModel {
     fun getKvizovi(): List<Kviz> {
-        return KvizRepository.getMockupKvizes()
+        return KvizRepository.getMockupKvizes().sortedBy { kviz -> kviz.datumPocetka }
     }
 }
