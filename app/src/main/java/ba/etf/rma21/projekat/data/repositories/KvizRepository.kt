@@ -1,13 +1,17 @@
 package ba.etf.rma21.projekat.data.repositories
 
 import ba.etf.rma21.projekat.data.models.Kviz
+import ba.etf.rma21.projekat.data.models.mockupKvizes
 
 class KvizRepository {
-
     companion object {
         // TODO: Implementirati
         init {
             // TODO: Implementirati
+        }
+
+        fun getMockupKvizes(): List<Kviz> {
+            return mockupKvizes()
         }
 
         fun getMyKvizes(): List<Kviz> {
@@ -34,6 +38,7 @@ class KvizRepository {
             // TODO: Implementirati
             return emptyList()
         }
+
         // TODO: Implementirati i ostale potrebne metode
     }
 }

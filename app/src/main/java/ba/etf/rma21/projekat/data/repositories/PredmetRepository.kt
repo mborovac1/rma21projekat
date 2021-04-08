@@ -13,7 +13,7 @@ class PredmetRepository {
             // TODO: Implementirati
             return emptyList()
         }
+
         // TODO: Implementirati i ostale potrebne metode
     }
-
 }
