@@ -23,6 +23,7 @@ class KvizListAdapter(
     override fun onBindViewHolder(holder: KvizViewHolder, position: Int) {
         holder.nazivPredmeta.text = kvizovi[position].nazivPredmeta
         holder.nazivKviza.text = kvizovi[position].naziv
+        holder.vrijemeKviza.text = kvizovi[position].trajanje.toString() + " min" // trajanje
 
         // osvojeni bodovi
         if (kvizovi[position].osvojeniBodovi != null)
@@ -30,10 +31,7 @@ class KvizListAdapter(
         else
             holder.bodoviKviza.text = ""
 
-        // trajanje
-        holder.vrijemeKviza.text = kvizovi[position].trajanje.toString() + " min"
-
-        // format za datum kviza
+        // format za datum kviza (npr 20.04.2021)
         val formatter = SimpleDateFormat("dd.MM.yyyy")
 
         // status i datum kviza

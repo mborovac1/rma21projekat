@@ -7,7 +7,6 @@ class KvizRepository {
     companion object {
         // TODO: Implementirati
         init {
-            // TODO: Implementirati
         }
 
         fun getMockupKvizes(): List<Kviz> {
