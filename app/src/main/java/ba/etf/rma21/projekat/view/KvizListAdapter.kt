@@ -12,11 +12,13 @@ import ba.etf.rma21.projekat.data.models.Kviz
 import java.text.SimpleDateFormat
 import java.util.*
 
-class KvizListAdapter(
+class KvizListAdapter (
         private var kvizovi: List<Kviz>
 ) : RecyclerView.Adapter<KvizListAdapter.KvizViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KvizViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_kviz, parent, false)
+        val view = LayoutInflater
+                .from(parent.context)
+                .inflate(R.layout.item_kviz, parent, false)
         return KvizViewHolder(view)
     }
 
@@ -63,7 +65,8 @@ class KvizListAdapter(
         }
 
         val context: Context = holder.statusPredmeta.context
-        var id: Int = context.resources.getIdentifier(bojaMatch, "drawable", context.packageName)
+        var id: Int = context.resources
+                .getIdentifier(bojaMatch, "drawable", context.packageName)
         holder.statusPredmeta.setImageResource(id)
     }
 

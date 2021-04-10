@@ -1,43 +1,51 @@
 package ba.etf.rma21.projekat.data.repositories
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import ba.etf.rma21.projekat.data.models.Kviz
-import ba.etf.rma21.projekat.data.models.mockupKvizes
+import ba.etf.rma21.projekat.data.models.kvizovi
+import java.util.*
 
 class KvizRepository {
     companion object {
-        // TODO: Implementirati
-        init {
-        }
+        @RequiresApi(Build.VERSION_CODES.O)
+        val sviKvizovi = kvizovi()
 
-        fun getMockupKvizes(): List<Kviz> {
-            return mockupKvizes()
-        }
+        fun getAll(): List<Kviz> = sviKvizovi
 
-        fun getMyKvizes(): List<Kviz> {
-            // TODO: Implementirati
-            return emptyList()
-        }
-
-        fun getAll(): List<Kviz> {
-            // TODO: Implementirati
-            return emptyList()
-        }
+        fun getMyKvizes(): List<Kviz> = KorisnikRepository.getMojiKvizovi()
 
         fun getDone(): List<Kviz> {
-            // TODO: Implementirati
-            return emptyList()
+            var listaKvizova: List<Kviz> = mutableListOf()
+            for (kviz in getMyKvizes())
+                if (kviz.datumRada != null)
+                    listaKvizova += kviz
+            return listaKvizova
         }
 
         fun getFuture(): List<Kviz> {
-            // TODO: Implementirati
-            return emptyList()
+            val danasnjiDatum: Date = Calendar.getInstance().time
+            var listaKvizova: List<Kviz> = mutableListOf()
+
+            for (kviz in getMyKvizes())
+                if (kviz.datumPocetka.after(danasnjiDatum))
+                    listaKvizova += kviz
+
+            return listaKvizova
         }
 
         fun getNotTaken(): List<Kviz> {
-            // TODO: Implementirati
-            return emptyList()
-        }
+            val danasnjiDatum: Date = Calendar.getInstance().time
+            var listaKvizova: List<Kviz> = mutableListOf()
 
-        // TODO: Implementirati i ostale potrebne metode
+            for (kviz in getMyKvizes())
+                if (kviz.datumPocetka.before(danasnjiDatum) &&
+                    kviz.datumKraj.before(danasnjiDatum) &&
+                    kviz.datumRada == null &&
+                    kviz.osvojeniBodovi == null)
+                        listaKvizova += kviz
+
+            return listaKvizova
+        }
     }
 }

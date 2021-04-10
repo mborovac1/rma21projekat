@@ -1,19 +1,14 @@
 package ba.etf.rma21.projekat.data.repositories
 
 import ba.etf.rma21.projekat.data.models.Predmet
+import ba.etf.rma21.projekat.data.models.predmeti
 
 class PredmetRepository {
     companion object {
-        fun getUpisani(): List<Predmet> {
-            // TODO: Implementirati
-            return emptyList()
-        }
+        val sviPredmeti = predmeti()
 
-        fun getAll(): List<Predmet> {
-            // TODO: Implementirati
-            return emptyList()
-        }
+        fun getUpisani(): List<Predmet> = KorisnikRepository.mojiPredmeti
 
-        // TODO: Implementirati i ostale potrebne metode
+        fun getAll(): List<Predmet> = sviPredmeti
     }
 }

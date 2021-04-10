@@ -51,7 +51,7 @@
         android:layout_marginTop="16dp">
 
         <TextView
-            android:id="@+id/odabirPredmet"
+            android:id="@+id/predmetText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -64,15 +64,15 @@
             android:textColor="@color/black" />
 
         <Spinner
-            android:id="@+id/predmetText"
+            android:id="@+id/odabirPredmet"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/odabirPredmet"
+            android:layout_alignBaseline="@id/predmetText"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:layout_toRightOf="@id/odabirPredmet"
+            android:layout_toRightOf="@id/predmetText"
             android:drawSelectorOnTop="true" />
     </LinearLayout>
 
