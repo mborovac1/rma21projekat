@@ -6,14 +6,14 @@ import ba.etf.rma21.projekat.data.models.Predmet
 
 class KorisnikRepository {
     companion object {
-        val godinaStudija: Int
-        val mojiPredmeti: List<Predmet>
-        val mojeGrupe: List<Grupa>
+        private var godinaStudija: Int
+        private var mojiPredmeti: ArrayList<Predmet>
+        private var mojeGrupe: ArrayList<Grupa>
 
         init {
             godinaStudija = 0
-            mojiPredmeti = mutableListOf(Predmet("RMA", 2))
-            mojeGrupe = mutableListOf(Grupa("RMA-Grupa1", "RMA"))
+            mojiPredmeti = arrayListOf(Predmet("RMA", 2))
+            mojeGrupe = arrayListOf(Grupa("RMA-Grupa1", "RMA"))
         }
 
         private fun provjeriKviz(kviz: Kviz): Boolean {
@@ -26,14 +26,21 @@ class KorisnikRepository {
 
         fun getMojiKvizovi(): List<Kviz> {
             val sviKvizovi = KvizRepository.getAll()
-            var rezultat: List<Kviz> = mutableListOf()
+            val rezultat: ArrayList<Kviz> = arrayListOf()
 
-            for (kviz in sviKvizovi) {
+            for (kviz in sviKvizovi)
                 if (provjeriKviz(kviz))
-                    rezultat += kviz
-            }
+                    rezultat.add(kviz)
 
             return rezultat
         }
+
+        fun getMojiPredmeti(): List<Predmet> = mojiPredmeti
+
+        fun getMojeGrupe(): List<Grupa> = mojeGrupe
+
+        fun dodajPredmet(predmet: Predmet) = mojiPredmeti.add(predmet)
+
+        fun dodajGrupu(grupa: Grupa) = mojeGrupe.add(grupa)
     }
 }

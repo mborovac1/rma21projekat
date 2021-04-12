@@ -30,13 +30,13 @@ fun grupe() : List<Grupa> {
             Grupa("WT-Grupa2", "WT"),
             Grupa("WT-Grupa3", "WT"),
 
-            Grupa("OOI-Grupa", "OOI"),
-            Grupa("OOI-Grupa", "OOI"),
-            Grupa("OOI-Grupa", "OOI"),
+            Grupa("OOI-Grupa1", "OOI"),
+            Grupa("OOI-Grupa2", "OOI"),
+            Grupa("OOI-Grupa3", "OOI"),
 
-            Grupa("VVS-Grupa", "VVS"),
-            Grupa("VVS-Grupa", "VVS"),
-            Grupa("VVS-Grupa", "VVS"),
+            Grupa("VVS-Grupa1", "VVS"),
+            Grupa("VVS-Grupa2", "VVS"),
+            Grupa("VVS-Grupa3", "VVS"),
 
             Grupa("PRS-Grupa1", "PRS"),
             Grupa("PRS-Grupa2", "PRS"),

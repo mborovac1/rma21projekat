@@ -70,4 +70,9 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, UpisPredmet::class.java)
         startActivity(intent)
     }
+
+    override fun onResume() {
+        super.onResume()
+        kvizAdapter.updateKvizovi(kvizListViewModel.getMojiKvizovi())
+    }
 }
