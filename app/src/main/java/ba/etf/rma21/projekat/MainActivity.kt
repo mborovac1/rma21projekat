@@ -9,6 +9,7 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ba.etf.rma21.projekat.data.repositories.KorisnikRepository
 import ba.etf.rma21.projekat.view.KvizListAdapter
 import ba.etf.rma21.projekat.viewmodel.KvizListViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -68,11 +69,27 @@ class MainActivity : AppCompatActivity() {
 
     private fun upisPredmeta() {
         val intent = Intent(this, UpisPredmet::class.java)
-        startActivity(intent)
+        startActivityForResult(intent, 5)
     }
 
     override fun onResume() {
         super.onResume()
-        kvizAdapter.updateKvizovi(kvizListViewModel.getMojiKvizovi())
+        // da npr. ako je bio u budućim kvizovima ostane tu nakon upisa u predmet
+        when (spinner.selectedItemPosition) {
+            1 -> kvizAdapter.updateKvizovi(kvizListViewModel.getAll())
+            2 -> kvizAdapter.updateKvizovi((kvizListViewModel.getDone()))
+            3 -> kvizAdapter.updateKvizovi(kvizListViewModel.getFuture())
+            4 -> kvizAdapter.updateKvizovi(kvizListViewModel.getNotTaken())
+            else -> kvizAdapter.updateKvizovi(kvizListViewModel.getMojiKvizovi())
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (data != null) {
+                val odabranaGodina: Int = data.getIntExtra("odabrana_godina", 0)
+                KorisnikRepository.setGodinaStudija(odabranaGodina)
+            }
     }
 }

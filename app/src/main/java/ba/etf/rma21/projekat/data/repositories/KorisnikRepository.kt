@@ -42,5 +42,11 @@ class KorisnikRepository {
         fun dodajPredmet(predmet: Predmet) = mojiPredmeti.add(predmet)
 
         fun dodajGrupu(grupa: Grupa) = mojeGrupe.add(grupa)
+
+        fun getGodinaStudija(): Int = godinaStudija
+
+        fun setGodinaStudija(godina: Int) {
+            godinaStudija = godina
+        }
     }
 }

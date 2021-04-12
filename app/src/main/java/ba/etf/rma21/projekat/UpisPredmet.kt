@@ -1,9 +1,11 @@
 package ba.etf.rma21.projekat
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import ba.etf.rma21.projekat.data.repositories.KorisnikRepository
 import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
 
 class UpisPredmet : AppCompatActivity() {
@@ -36,35 +38,41 @@ class UpisPredmet : AppCompatActivity() {
                                     position: Int, id: Long) {
             if (parent != null) { // da ne moram pisati npr parent?.id umjestp parent.id
                 if (parent.id == R.id.odabirGodina) {
-                    odabranaGodina = spinnerGodina.selectedItem.toString()
-                    if (!odabranaGodina.equals("Odaberite godinu")) {
-                        dodajPredmetDugme.isEnabled = false
-                        spinnerPredmet.isEnabled = true
-                        listaGrupa.clear()
-                        listaGrupa.add("")
-                        spinnerGrupa.setSelection(0)
-                        spinnerGrupa.isEnabled = false
-                        spinnerGrupaAdapter.notifyDataSetChanged()
+                    if (KorisnikRepository.getGodinaStudija() != 0) {
+                        spinnerGodina.isEnabled = true
+                        spinnerGodina.setSelection(KorisnikRepository.getGodinaStudija())
+                        KorisnikRepository.setGodinaStudija(0)
+                    } else {
+                        odabranaGodina = spinnerGodina.selectedItem.toString()
+                        if (!odabranaGodina.equals("Odaberite godinu")) {
+                            dodajPredmetDugme.isEnabled = false
+                            spinnerPredmet.isEnabled = true
+                            listaGrupa.clear()
+                            listaGrupa.add("")
+                            spinnerGrupa.setSelection(0)
+                            spinnerGrupa.isEnabled = false
+                            spinnerGrupaAdapter.notifyDataSetChanged()
 
-                        listaPredmeta.clear()
-                        listaPredmeta.add("Odaberite predmet")
-                        listaPredmeta.addAll(
-                                upisViewModel.getNeupisani(odabranaGodina.toInt())
-                        )
-                        spinnerPredmet.setSelection(0)
-                        spinnerPredmetAdapter.notifyDataSetChanged()
-                    } else if (spinnerPredmet.isEnabled) {
-                        listaPredmeta.clear()
-                        listaPredmeta.add("")
-                        spinnerPredmet.setSelection(0)
-                        spinnerPredmet.isEnabled = false
-                        spinnerPredmetAdapter.notifyDataSetChanged()
+                            listaPredmeta.clear()
+                            listaPredmeta.add("Odaberite predmet")
+                            listaPredmeta.addAll(
+                                    upisViewModel.getNeupisani(odabranaGodina.toInt())
+                            )
+                            spinnerPredmet.setSelection(0)
+                            spinnerPredmetAdapter.notifyDataSetChanged()
+                        } else if (spinnerPredmet.isEnabled) {
+                            listaPredmeta.clear()
+                            listaPredmeta.add("")
+                            spinnerPredmet.setSelection(0)
+                            spinnerPredmet.isEnabled = false
+                            spinnerPredmetAdapter.notifyDataSetChanged()
 
-                        listaGrupa.clear()
-                        listaGrupa.add("")
-                        spinnerGrupa.setSelection(0)
-                        spinnerGrupa.isEnabled = false
-                        spinnerGrupaAdapter.notifyDataSetChanged()
+                            listaGrupa.clear()
+                            listaGrupa.add("")
+                            spinnerGrupa.setSelection(0)
+                            spinnerGrupa.isEnabled = false
+                            spinnerGrupaAdapter.notifyDataSetChanged()
+                        }
                     }
                 } else if (parent.id == R.id.odabirPredmet) {
                     odabraniPredmet = spinnerPredmet.selectedItem.toString()
@@ -128,6 +136,11 @@ class UpisPredmet : AppCompatActivity() {
 
         dodajPredmetDugme.setOnClickListener {
             upisViewModel.upisiPredmet(odabraniPredmet, odabranaGrupa, odabranaGodina)
+
+            val povratniIntent = Intent()
+            povratniIntent.putExtra("odabrana_godina", odabranaGodina.toInt())
+
+            setResult(RESULT_OK, povratniIntent)
             finish()
         }
     }
