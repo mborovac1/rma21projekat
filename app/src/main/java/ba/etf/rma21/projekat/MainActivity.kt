@@ -1,95 +1,47 @@
 package ba.etf.rma21.projekat
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import ba.etf.rma21.projekat.data.repositories.KorisnikRepository
-import ba.etf.rma21.projekat.view.KvizListAdapter
-import ba.etf.rma21.projekat.viewmodel.KvizListViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.fragment.app.Fragment
+import ba.etf.rma21.projekat.view.FragmentKvizovi
+import ba.etf.rma21.projekat.view.FragmentPredmeti
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var kvizovi: RecyclerView
-    private lateinit var kvizAdapter: KvizListAdapter
-    private var kvizListViewModel = KvizListViewModel()
+    private lateinit var bottomNavigation: BottomNavigationView
 
-    // spinner
-    private lateinit var spinner: Spinner
-    private val spinnerListaVrijednosti = arrayListOf("Svi moji kvizovi", "Svi kvizovi",
-                                  "Urađeni kvizovi", "Budući kvizovi", "Prošli kvizovi")
-    private lateinit var spinnerAdapter: ArrayAdapter<String>
-
-    // dugme za upis predmeta (otvara aktivnost "UpisPredmet")
-    private lateinit var upisDugme: FloatingActionButton
+    private val mOnNavigationItemSelectedListener =
+            BottomNavigationView.OnNavigationItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.kvizovi -> {
+                        val fragmentKvizovi = FragmentKvizovi.newInstance()
+                        openFragment(fragmentKvizovi)
+                        return@OnNavigationItemSelectedListener true
+                    }
+                    R.id.predmeti -> {
+                        val fragmentPredmeti = FragmentPredmeti.newInstance()
+                        openFragment(fragmentPredmeti)
+                        return@OnNavigationItemSelectedListener true
+                    }
+                }
+                false
+            }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        kvizovi = findViewById(R.id.listaKvizova)
-        kvizovi.layoutManager = GridLayoutManager(this, 2) // 2 kolone
-        kvizAdapter = KvizListAdapter(listOf())
-        kvizovi.adapter = kvizAdapter
-
-        // spinner
-        spinner = findViewById(R.id.filterKvizova)
-        spinnerAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,
-                                      spinnerListaVrijednosti)
-        spinner.adapter = spinnerAdapter
-
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?,
-                                        position: Int, id: Long) {
-                when (position) {
-                    1 -> kvizAdapter.updateKvizovi(kvizListViewModel.getAll())
-                    2 -> kvizAdapter.updateKvizovi((kvizListViewModel.getDone()))
-                    3 -> kvizAdapter.updateKvizovi(kvizListViewModel.getFuture())
-                    4 -> kvizAdapter.updateKvizovi(kvizListViewModel.getNotTaken())
-                    else -> kvizAdapter.updateKvizovi(kvizListViewModel.getMojiKvizovi())
-                }
-            }
-        }
-
-        // dugme za upis predmeta
-        upisDugme = findViewById(R.id.upisDugme)
-        upisDugme.setOnClickListener {
-            upisPredmeta()
-        }
+        bottomNavigation = findViewById(R.id.bottomNav)
+        bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        bottomNavigation.selectedItemId = R.id.kvizovi
+        val fragmentKvizovi = FragmentKvizovi.newInstance()
+        openFragment(fragmentKvizovi)
     }
 
-    private fun upisPredmeta() {
-        val intent = Intent(this, UpisPredmet::class.java)
-        startActivityForResult(intent, 5)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // da npr. ako je bio u budućim kvizovima ostane tu nakon upisa u predmet
-        when (spinner.selectedItemPosition) {
-            1 -> kvizAdapter.updateKvizovi(kvizListViewModel.getAll())
-            2 -> kvizAdapter.updateKvizovi((kvizListViewModel.getDone()))
-            3 -> kvizAdapter.updateKvizovi(kvizListViewModel.getFuture())
-            4 -> kvizAdapter.updateKvizovi(kvizListViewModel.getNotTaken())
-            else -> kvizAdapter.updateKvizovi(kvizListViewModel.getMojiKvizovi())
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (data != null) {
-                val odabranaGodina: Int = data.getIntExtra("odabrana_godina", 0)
-                KorisnikRepository.setGodinaStudija(odabranaGodina)
-            }
+    private fun openFragment(fragment: Fragment) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }

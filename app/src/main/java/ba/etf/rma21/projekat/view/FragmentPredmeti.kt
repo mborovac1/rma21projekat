@@ -1,14 +1,20 @@
-package ba.etf.rma21.projekat
+package ba.etf.rma21.projekat.view
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.Spinner
+import androidx.fragment.app.Fragment
+import ba.etf.rma21.projekat.R
+import ba.etf.rma21.projekat.data.models.Grupa
 import ba.etf.rma21.projekat.data.repositories.KorisnikRepository
 import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
 
-class UpisPredmet : AppCompatActivity() {
+class FragmentPredmeti : Fragment() {
     private lateinit var spinnerGodina: Spinner
     private lateinit var spinnerGodinaAdapter: ArrayAdapter<String>
     private val listaGodina = arrayListOf("Odaberite godinu", "1", "2", "3", "4", "5")
@@ -102,26 +108,25 @@ class UpisPredmet : AppCompatActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_upis_predmet)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        var view = inflater.inflate(R.layout.predmeti_fragment, container, false)
 
-        // inicijalizacija elemenata
-        spinnerGodina = findViewById(R.id.odabirGodina)
+        spinnerGodina = view.findViewById(R.id.odabirGodina)
 
-        spinnerPredmet = findViewById(R.id.odabirPredmet)
-        spinnerGrupa = findViewById(R.id.odabirGrupa)
-        dodajPredmetDugme = findViewById(R.id.dodajPredmetDugme)
+        spinnerPredmet = view.findViewById(R.id.odabirPredmet)
+        spinnerGrupa = view.findViewById(R.id.odabirGrupa)
+        dodajPredmetDugme = view.findViewById(R.id.dodajPredmetDugme)
 
-        spinnerGodinaAdapter = ArrayAdapter(this,
+        spinnerGodinaAdapter = ArrayAdapter(view.context,
                 android.R.layout.simple_list_item_1, listaGodina)
         spinnerGodina.adapter = spinnerGodinaAdapter
 
-        spinnerPredmetAdapter = ArrayAdapter(this,
+        spinnerPredmetAdapter = ArrayAdapter(view.context,
                 android.R.layout.simple_list_item_1, listaPredmeta)
         spinnerPredmet.adapter = spinnerPredmetAdapter
 
-        spinnerGrupaAdapter = ArrayAdapter(this,
+        spinnerGrupaAdapter = ArrayAdapter(view.context,
                 android.R.layout.simple_list_item_1, listaGrupa)
         spinnerGrupa.adapter = spinnerGrupaAdapter
 
@@ -137,11 +142,36 @@ class UpisPredmet : AppCompatActivity() {
         dodajPredmetDugme.setOnClickListener {
             upisViewModel.upisiPredmet(odabraniPredmet, odabranaGrupa, odabranaGodina)
 
-            val povratniIntent = Intent()
-            povratniIntent.putExtra("odabrana_godina", odabranaGodina.toInt())
+            val bundle = Bundle()
+            bundle.putString("odabrani_predmet", odabraniPredmet)
+            bundle.putString("odabrana_grupa", odabranaGrupa)
+            bundle.putString("odabrana_godina", odabranaGodina)
 
-            setResult(RESULT_OK, povratniIntent)
-            finish()
+            val grupa = Grupa(odabranaGrupa, odabraniPredmet)
+
+            val fragmentPoruka = FragmentPoruka(grupa)
+            openFragment(fragmentPoruka)
+
+            /*
+            val fragmentKvizovi = FragmentKvizovi.newInstance()
+            fragmentKvizovi.arguments = bundle
+            openFragment(fragmentKvizovi)
+            */
+        }
+
+        return view
+    }
+
+    companion object {
+        fun newInstance(): FragmentPredmeti = FragmentPredmeti()
+    }
+
+    private fun openFragment(fragment: Fragment) {
+        if (fragmentManager != null) {
+            val transaction = fragmentManager!!.beginTransaction()
+            transaction.replace(R.id.container, fragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
         }
     }
 }
