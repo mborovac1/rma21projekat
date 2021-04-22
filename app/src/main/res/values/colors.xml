@@ -10,4 +10,6 @@
     <color name="card_view_pozadina">#99B6BA</color>
     <color name="card_view_pozadina2">#D5DDDE</color>
     <color name="boja_teksta">#384446</color>
+    <color name="zelena">#3DDC84</color>
+    <color name="crvena">#DB4F3D</color>
 </resources>

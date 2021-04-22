@@ -11,4 +11,14 @@
         android:icon="@android:drawable/ic_menu_search"
         android:title="Predmeti"/>
 
+    <item
+        android:id="@+id/predajKviz"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Predaj kviz"/>
+
+    <item
+        android:id="@+id/zaustaviKviz"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="Zaustavi kviz"/>
+
 </menu>

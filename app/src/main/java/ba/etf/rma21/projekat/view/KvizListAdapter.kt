@@ -13,7 +13,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class KvizListAdapter (
-        private var kvizovi: List<Kviz>
+        private var kvizovi: List<Kviz>,
+        private val onItemClicked: (kviz: Kviz) -> Unit
 ) : RecyclerView.Adapter<KvizListAdapter.KvizViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KvizViewHolder {
         val view = LayoutInflater
@@ -68,6 +69,8 @@ class KvizListAdapter (
         var id: Int = context.resources
                 .getIdentifier(bojaMatch, "drawable", context.packageName)
         holder.statusPredmeta.setImageResource(id)
+
+        holder.itemView.setOnClickListener{ onItemClicked(kvizovi[position]) }
     }
 
     override fun getItemCount(): Int = kvizovi.size
