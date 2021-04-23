@@ -3,13 +3,16 @@ package ba.etf.rma21.projekat
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import ba.etf.rma21.projekat.data.repositories.PitanjeKvizRepository
 import ba.etf.rma21.projekat.view.FragmentKvizovi
-import ba.etf.rma21.projekat.view.FragmentPokusaj
+import ba.etf.rma21.projekat.view.FragmentPoruka
 import ba.etf.rma21.projekat.view.FragmentPredmeti
+import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+    //private val kvizListViewModel = KvizListViewModel()
+    private var pitanjeKvizViewModel = PitanjeKvizViewModel()
+
     private lateinit var bottomNavigation: BottomNavigationView
 
     private val mOnNavigationItemSelectedListener =
@@ -25,8 +28,14 @@ class MainActivity : AppCompatActivity() {
                         openFragment(fragmentPredmeti)
                         return@OnNavigationItemSelectedListener true
                     }
-                    R.id.predajKviz, R.id.zaustaviKviz -> {
-                        // dodati nešto (?)
+                    R.id.predajKviz -> {
+                        val rezultat = pitanjeKvizViewModel.getRezultatKviza()
+                        val poruka = "Završili ste kviz " + pitanjeKvizViewModel.getNazivKviza() +
+                                " sa tačnosti " + rezultat.toString()
+                        openFragment(FragmentPoruka(poruka))
+                        return@OnNavigationItemSelectedListener true
+                    }
+                    R.id.zaustaviKviz -> {
                         return@OnNavigationItemSelectedListener true
                     }
                 }
@@ -64,4 +73,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getBottomNavigation(): BottomNavigationView = bottomNavigation
+
+    fun popraviNavigacijskeOpcije(opcija: Int) {
+        val activity = this
+        val menu = activity.getBottomNavigation().menu
+
+        when (opcija) {
+            R.id.kvizovi, R.id.predmeti -> {
+                menu.findItem(R.id.kvizovi).isVisible = true
+                menu.findItem(R.id.predmeti).isVisible = true
+                menu.findItem(R.id.predajKviz).isVisible = false
+                menu.findItem(R.id.zaustaviKviz).isVisible = false
+            }
+            R.id.predajKviz, R.id.zaustaviKviz -> {
+                menu.findItem(R.id.kvizovi).isVisible = false
+                menu.findItem(R.id.predmeti).isVisible = false
+                menu.findItem(R.id.predajKviz).isVisible = true
+                menu.findItem(R.id.zaustaviKviz).isVisible = true
+            }
+        }
+    }
 }

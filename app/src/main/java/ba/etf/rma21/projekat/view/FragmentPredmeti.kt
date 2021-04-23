@@ -11,7 +11,6 @@ import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
-import ba.etf.rma21.projekat.data.models.Grupa
 import ba.etf.rma21.projekat.data.repositories.KorisnikRepository
 import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
 
@@ -121,12 +120,7 @@ class FragmentPredmeti : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val activity = activity as MainActivity
-        val menu = activity.getBottomNavigation().menu
-
-        menu.findItem(R.id.kvizovi).isVisible = true
-        menu.findItem(R.id.predmeti).isVisible = true
-        menu.findItem(R.id.predajKviz).isVisible = false
-        menu.findItem(R.id.zaustaviKviz).isVisible = false
+        activity.popraviNavigacijskeOpcije(R.id.predmeti)
 
         var view = inflater.inflate(R.layout.predmeti_fragment, container, false)
 
@@ -160,11 +154,13 @@ class FragmentPredmeti : Fragment() {
         dodajPredmetDugme.setOnClickListener {
             upisViewModel.upisiPredmet(odabraniPredmet, odabranaGrupa, odabranaGodina)
 
-            var bundle = Bundle()
+            val bundle = Bundle()
             bundle.putString("odabrana_godina", odabranaGodina)
-            val grupa = Grupa(odabranaGrupa, odabraniPredmet)
 
-            val fragmentPoruka = FragmentPoruka(grupa)
+            val poruka = "Uspješno ste upisani u grupu " + odabranaGrupa +
+                            " predmeta " + odabraniPredmet + "!"
+
+            val fragmentPoruka = FragmentPoruka(poruka)
             fragmentPoruka.arguments = bundle
             openFragment(fragmentPoruka)
         }

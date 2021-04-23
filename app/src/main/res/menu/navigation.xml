@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/kvizovi"
-        android:icon="@android:drawable/btn_star_big_off"
+        android:icon="@android:drawable/star_big_on"
         android:title="Kvizovi"/>
 
     <item
         android:id="@+id/predmeti"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@android:drawable/ic_menu_add"
         android:title="Predmeti"/>
 
     <item

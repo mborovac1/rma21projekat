@@ -18,14 +18,7 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         val activity = activity as MainActivity
-        val menu = activity.getBottomNavigation().menu
-
-        activity.getBottomNavigation().selectedItemId = R.id.predajKviz
-
-        menu.findItem(R.id.kvizovi).isVisible = false
-        menu.findItem(R.id.predmeti).isVisible = false
-        menu.findItem(R.id.predajKviz).isVisible = true
-        menu.findItem(R.id.zaustaviKviz).isVisible = true
+        activity.popraviNavigacijskeOpcije(R.id.predajKviz)
 
         var view = inflater.inflate(R.layout.pokusaj_fragment, container, false)
 
@@ -35,10 +28,16 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
             navigacijaPitanja.menu.add(NONE, i, NONE, (i + 1).toString())
 
         navigacijaPitanja.setNavigationItemSelectedListener {
-            openFragment(FragmentPitanje(listaPitanja[it.itemId]))
+            val bundle = Bundle()
+            bundle.putInt("navigacijaPitanja_id", it.itemId)
+            val fragmentPitanje = FragmentPitanje(listaPitanja[it.itemId])
+
+            fragmentPitanje.arguments = bundle
+            openFragment(fragmentPitanje)
+
+            it.isEnabled = false
             true
         }
-
         return view
     }
 
