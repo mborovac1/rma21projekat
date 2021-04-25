@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
                         pitanjeKvizViewModel.getOdabraniKviz().zavrsen = true
 
-
                         openFragment(FragmentPoruka(poruka))
                         return@OnNavigationItemSelectedListener true
                     }
@@ -45,6 +44,7 @@ class MainActivity : AppCompatActivity() {
                         pitanjeKvizViewModel.getOdabraniKviz().prekinut = true
                         val fragmentKvizovi = FragmentKvizovi.newInstance()
                         openFragment(fragmentKvizovi)
+                        bottomNavigation.selectedItemId = R.id.kvizovi
                         return@OnNavigationItemSelectedListener true
                     }
                 }

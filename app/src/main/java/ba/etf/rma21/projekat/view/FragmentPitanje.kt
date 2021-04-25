@@ -16,7 +16,6 @@ import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.models.Pitanje
 import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
-import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
 import com.google.android.material.navigation.NavigationView
 
 class FragmentPitanje(pitanje: Pitanje) : Fragment() {
@@ -79,20 +78,20 @@ class FragmentPitanje(pitanje: Pitanje) : Fragment() {
                     if (odgovor == pitanje.tacan) {
                         odgovoriLista[odgovor].setBackgroundColor(Color.parseColor("#3DDC84"))
                     }
+                    else {
+                        odgovoriLista[odgovor].setBackgroundColor(Color.parseColor("#DB4F3D"))
+                        odgovoriLista[pitanje.tacan].setBackgroundColor(Color.parseColor("#3DDC84"))
+                    }
                 }
             }
         } else {
             odgovoriLista.setOnItemClickListener { parent, view1, position, id ->
-                if (pitanjeKvizViewModel.getOdabraniKviz().zavrsen) {
-                    activity.popraviNavigacijskeOpcije(R.id.kvizovi)
-                }
                 val element = parent.getChildAt(position)
                 val boja = element as TextView
                 boja.setTextColor(Color.parseColor("#FF000000")) // boja teksta - crna
 
                 val tacanOdgovorBoja: Int = Color.parseColor("#3DDC84")
                 val netacanOdgovorBoja: Int = Color.parseColor("#DB4F3D")
-
 
                 pitanjeKvizViewModel.postaviOdgovor(pitanje.naziv, nazivKviza, nazivPredmeta, position)
 

@@ -40,7 +40,7 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
         navigacijaPitanja = view.findViewById(R.id.navigacijaPitanja)
 
         for (i in 0 until listaPitanja.size)
-            navigacijaPitanja.menu.add(NONE, i, NONE, (i + 1).toString())
+            navigacijaPitanja.menu.add(R.id.grupa, i, i, (i + 1).toString())
 
 
         if (pitanjeKvizViewModel.getOdabraniKviz().zavrsen) {
@@ -66,6 +66,9 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
                 }
                 menuItem.title = spanString
             }
+
+            navigacijaPitanja.menu.add(R.id.grupa, listaPitanja.size, listaPitanja.size, "Rezultat")
+
         } else if (pitanjeKvizViewModel.getOdabraniKviz().prekinut) {
             for (i in 0 until listaPitanja.size) {
                 val menuItem = navigacijaPitanja.menu[i]
@@ -94,11 +97,26 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
             bundleNovi.putInt("navigacijaPitanja_id", it.itemId)
             bundleNovi.putString("naziv_kviza", nazivKviza)
             bundleNovi.putString("predmet_kviza", nazivPredmeta)
-            val fragmentPitanje = FragmentPitanje(listaPitanja[it.itemId])
+            bundleNovi.putInt("rezultat_id", listaPitanja.size)
 
-            fragmentPitanje.arguments = bundleNovi
-            openFragment(fragmentPitanje)
+            if (it.itemId == listaPitanja.size) {
+                val rezultatKviza = pitanjeKvizViewModel
+                        .getRezultatKviza(pitanjeKvizViewModel.getOdabraniKviz().naziv,
+                                pitanjeKvizViewModel.getOdabraniKviz().nazivPredmeta)
+                val poruka = "Završili ste kviz " +
+                        pitanjeKvizViewModel.getOdabraniKviz().naziv +
+                        " sa tačnosti " + rezultatKviza
+                val fragmentPoruka = FragmentPoruka(poruka)
+                val transaction = fragmentManager!!.beginTransaction()
+                transaction.replace(R.id.container, fragmentPoruka)
+                transaction.addToBackStack(null)
+                transaction.commit()
+            } else {
+                val fragmentPitanje = FragmentPitanje(listaPitanja[it.itemId])
+                fragmentPitanje.arguments = bundleNovi
+                openFragment(fragmentPitanje)
 
+            }
             //it.isEnabled = false
             true
         }
