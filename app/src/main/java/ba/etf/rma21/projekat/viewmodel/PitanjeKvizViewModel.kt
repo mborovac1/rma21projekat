@@ -1,5 +1,6 @@
 package ba.etf.rma21.projekat.viewmodel
 
+import ba.etf.rma21.projekat.data.models.Kviz
 import ba.etf.rma21.projekat.data.models.Pitanje
 import ba.etf.rma21.projekat.data.repositories.PitanjeKvizRepository
 
@@ -8,23 +9,57 @@ class PitanjeKvizViewModel {
         return PitanjeKvizRepository.getPitanja(nazivKviza, nazivPredmeta)
     }
 
-    fun resetujBrojTacnihOdgovora() = PitanjeKvizRepository.resetujBrojTacnihOdgovora()
+    fun validacijaOdgovora(pozicija: Int, pitanje: Pitanje): Boolean = pozicija == pitanje.tacan
 
-    fun getNazivKviza(): String = PitanjeKvizRepository.getNazivKviza()
+    fun postaviOdgovor(nazivPitanja: String, nazivKviza: String, nazivPredmeta: String,
+                       pozicija: Int) {
+        val sve = PitanjeKvizRepository.getAll()
 
-    fun setNazivKviza(naziv: String) = PitanjeKvizRepository.setNazivKviza(naziv)
-
-    fun getNazivPredmeta(): String = PitanjeKvizRepository.getNazivPredmeta()
-
-    fun setNazivPredmeta(naziv: String) = PitanjeKvizRepository.setNazivPredmeta(naziv)
-
-    fun getRezultatKviza(): Double = PitanjeKvizRepository.getRezultatKviza()
-
-    fun validacijaOdgovora(pozicija: Int, pitanje: Pitanje): Boolean {
-        if (pozicija == pitanje.tacan) {
-            PitanjeKvizRepository.povecajBrojTacnihOdgovora()
-            return true
+        for (pitanjeKviz in sve) {
+            if (pitanjeKviz.naziv.equals(nazivPitanja) &&
+                    pitanjeKviz.predmet.equals(nazivPredmeta) &&
+                    pitanjeKviz.kviz.equals(nazivKviza)) {
+                        pitanjeKviz.odabraniOdgovor = pozicija
+            }
         }
-        return false
+    }
+
+    fun getOdgovorZaPitanje(nazivPitanja: String, nazivKviza: String, nazivPredmeta: String): Int {
+        val sve = PitanjeKvizRepository.getAll()
+
+        for (pitanjeKviz in sve) {
+            if (pitanjeKviz.naziv.equals(nazivPitanja) &&
+                    pitanjeKviz.predmet.equals(nazivPredmeta) &&
+                    pitanjeKviz.kviz.equals(nazivKviza)) {
+                return pitanjeKviz.odabraniOdgovor
+            }
+        }
+        return -2 // nece se nikad desiti
+    }
+
+    fun getRezultatKviza(nazivKviza: String, nazivPredmeta: String): Double {
+        val sve = PitanjeKvizRepository.getPitanja(nazivKviza, nazivPredmeta)
+        val svaPitanja = PitanjeKvizRepository.getAll()
+        var brojTacnih = 0
+
+        for (pitanje in sve) {
+            for (pitanjeKviz in svaPitanja) {
+                if (pitanjeKviz.naziv.equals(pitanje.naziv)) {
+                    if (pitanjeKviz.odabraniOdgovor == pitanje.tacan)
+                        brojTacnih++
+                }
+            }
+        }
+
+        if (brojTacnih == 0 || sve.size == 0)
+            return 0.0
+
+        return String.format("%.1f", (brojTacnih.toDouble() / sve.size) * 100).toDouble()
+    }
+
+    fun getOdabraniKviz(): Kviz = PitanjeKvizRepository.odabraniKviz!!
+
+    fun setOdabraniKviz(kviz: Kviz) {
+        PitanjeKvizRepository.odabraniKviz = kviz
     }
 }

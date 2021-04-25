@@ -38,9 +38,7 @@ class FragmentKvizovi : Fragment() {
         kvizovi = view.findViewById(R.id.listaKvizova)
         kvizovi.layoutManager = GridLayoutManager(activity, 2) // 2 kolone
         kvizAdapter = KvizListAdapter(listOf()) { kviz ->
-            pitanjeKvizViewModel.setNazivKviza(kviz.naziv)
-            pitanjeKvizViewModel.setNazivPredmeta(kviz.nazivPredmeta)
-            pitanjeKvizViewModel.resetujBrojTacnihOdgovora()
+            pitanjeKvizViewModel.setOdabraniKviz(kviz)
             showKvizDetails(kviz)
         }
         kvizovi.adapter = kvizAdapter
@@ -87,6 +85,12 @@ class FragmentKvizovi : Fragment() {
     private fun showKvizDetails(kviz: Kviz) {
         val fragmentPokusaj = FragmentPokusaj(pitanjeKvizViewModel
                 .getPitanja(kviz.naziv, kviz.nazivPredmeta))
+
+        val bundle = Bundle()
+        bundle.putString("naziv_kviza", kviz.naziv)
+        bundle.putString("predmet_kviza", kviz.nazivPredmeta)
+        fragmentPokusaj.arguments = bundle
+
         openFragment(fragmentPokusaj)
     }
 }

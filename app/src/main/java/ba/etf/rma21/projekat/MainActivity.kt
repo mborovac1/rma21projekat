@@ -10,7 +10,6 @@ import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    //private val kvizListViewModel = KvizListViewModel()
     private var pitanjeKvizViewModel = PitanjeKvizViewModel()
 
     private lateinit var bottomNavigation: BottomNavigationView
@@ -29,13 +28,23 @@ class MainActivity : AppCompatActivity() {
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.predajKviz -> {
-                        val rezultat = pitanjeKvizViewModel.getRezultatKviza()
-                        val poruka = "Završili ste kviz " + pitanjeKvizViewModel.getNazivKviza() +
-                                " sa tačnosti " + rezultat.toString()
+                        val rezultatKviza = pitanjeKvizViewModel
+                                .getRezultatKviza(pitanjeKvizViewModel.getOdabraniKviz().naziv,
+                                        pitanjeKvizViewModel.getOdabraniKviz().nazivPredmeta)
+                        val poruka = "Završili ste kviz " +
+                                pitanjeKvizViewModel.getOdabraniKviz().naziv +
+                                " sa tačnosti " + rezultatKviza
+
+                        pitanjeKvizViewModel.getOdabraniKviz().zavrsen = true
+
+
                         openFragment(FragmentPoruka(poruka))
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.zaustaviKviz -> {
+                        pitanjeKvizViewModel.getOdabraniKviz().prekinut = true
+                        val fragmentKvizovi = FragmentKvizovi.newInstance()
+                        openFragment(fragmentKvizovi)
                         return@OnNavigationItemSelectedListener true
                     }
                 }

@@ -9,9 +9,11 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.repositories.KorisnikRepository
+import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 
 class FragmentPoruka(tekst: String) : Fragment() {
-    private var tekst = tekst
+    private val tekst = tekst
+    private val pitanjeKvizViewModel = PitanjeKvizViewModel()
     private lateinit var poruka: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -20,12 +22,12 @@ class FragmentPoruka(tekst: String) : Fragment() {
         activity.popraviNavigacijskeOpcije(R.id.kvizovi)
 
         // postavljanje godine nakon upisa
-        var bundle = this.arguments
-        if (bundle != null) {
-            var odabranaGodina: String? = bundle.getString("odabrana_godina")
-            if (odabranaGodina != null)
-                KorisnikRepository.setGodinaStudija(odabranaGodina.toInt())
-        }
+        val bundle = this.arguments as Bundle?
+        val odabranaGodina: String? = bundle?.getString("odabrana_godina")
+        if (odabranaGodina != null)
+            KorisnikRepository.setGodinaStudija(odabranaGodina.toInt())
+
+        val upisPoruka = bundle?.getString("upis_poruka")
 
         var view = inflater.inflate(R.layout.poruka_fragment, container, false)
 
