@@ -5,19 +5,14 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
-import android.view.Menu.NONE
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.models.Pitanje
-import ba.etf.rma21.projekat.data.models.PitanjeKviz
-import ba.etf.rma21.projekat.data.models.Predmet
 import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
-import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
 import com.google.android.material.navigation.NavigationView
 
 class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
@@ -107,7 +102,8 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
                         pitanjeKvizViewModel.getOdabraniKviz().naziv +
                         " sa tačnosti " + rezultatKviza
                 val fragmentPoruka = FragmentPoruka(poruka)
-                val transaction = fragmentManager!!.beginTransaction()
+                val transaction = (activity as MainActivity).supportFragmentManager
+                        .beginTransaction()
                 transaction.replace(R.id.container, fragmentPoruka)
                 transaction.addToBackStack(null)
                 transaction.commit()
@@ -124,11 +120,9 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
     }
 
     private fun openFragment(fragment: Fragment) {
-        if (fragmentManager != null) {
-            val transaction = fragmentManager!!.beginTransaction()
-            transaction.replace(R.id.framePitanje, fragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
+        val transaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.framePitanje, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }

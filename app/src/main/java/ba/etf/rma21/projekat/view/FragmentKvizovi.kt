@@ -74,12 +74,10 @@ class FragmentKvizovi : Fragment() {
     }
 
     private fun openFragment(fragment: Fragment) {
-        if (fragmentManager != null) {
-            val transaction = fragmentManager!!.beginTransaction()
-            transaction.replace(R.id.container, fragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
+        val transaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     private fun showKvizDetails(kviz: Kviz) {

@@ -158,7 +158,7 @@ class FragmentPredmeti : Fragment() {
             bundle.putString("odabrana_godina", odabranaGodina)
 
             val poruka = "Uspješno ste upisani u grupu " + odabranaGrupa +
-                            " predmeta " + odabraniPredmet + "!"
+                    " predmeta " + odabraniPredmet + "!"
 
             val fragmentPoruka = FragmentPoruka(poruka)
             fragmentPoruka.arguments = bundle
@@ -173,11 +173,9 @@ class FragmentPredmeti : Fragment() {
     }
 
     private fun openFragment(fragment: Fragment) {
-        if (fragmentManager != null) {
-            val transaction = fragmentManager!!.beginTransaction()
-            transaction.replace(R.id.container, fragment)
-            transaction.addToBackStack(null)
-            transaction.commit()
-        }
+        val transaction = (activity as MainActivity).supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 }
