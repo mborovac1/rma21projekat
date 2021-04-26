@@ -45,7 +45,7 @@ class UpisPredmetViewModelUnitTest {
     // lista predmeta po godinama
     @Test
     fun getNeupisani() {
-        val neupisaniPredmeti = upisPredmetViewModel.getNeupisani(1)
+        val neupisaniPredmeti = upisPredmetViewModel.getNeupisaniNazivi(1)
         assertEquals(neupisaniPredmeti.size, 3) // nije upisan na IM, TP i MLTI sa prve god.
         assertTrue(neupisaniPredmeti.contains("IM"))
         assertFalse(neupisaniPredmeti.contains("SI"))
@@ -54,7 +54,7 @@ class UpisPredmetViewModelUnitTest {
     // lista grupa po predmetima
     @Test
     fun getGroupsByPredmet() {
-        val grupeZaPredmet = upisPredmetViewModel.getGroupsByPredmet("IM")
+        val grupeZaPredmet = upisPredmetViewModel.getNaziviGroupaZaPredmet("IM")
         assertEquals(grupeZaPredmet.size, 3)
         assertTrue(grupeZaPredmet.containsAll(listOf("IM-Grupa1", "IM-Grupa2", "IM-Grupa3")))
         assertFalse(grupeZaPredmet.contains("DM-Grupa1"))
@@ -63,10 +63,10 @@ class UpisPredmetViewModelUnitTest {
     @Test
     fun upisiPredmet() {
         var neupisaniPredmeti: List<String>
-        neupisaniPredmeti = upisPredmetViewModel.getNeupisani(1)
+        neupisaniPredmeti = upisPredmetViewModel.getNeupisaniNazivi(1)
         assertEquals(neupisaniPredmeti.size, 3)
         upisPredmetViewModel.upisiPredmet("IM", "IM-Grupa1", "1")
-        neupisaniPredmeti = upisPredmetViewModel.getNeupisani(1)
+        neupisaniPredmeti = upisPredmetViewModel.getNeupisaniNazivi(1)
         assertEquals(neupisaniPredmeti.size, 2) // nakon upisa smanjuje se broj neupisanih
     }
 }

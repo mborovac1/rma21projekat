@@ -15,6 +15,8 @@ import ba.etf.rma21.projekat.data.repositories.KorisnikRepository
 import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
 
 class FragmentPredmeti : Fragment() {
+    private val upisViewModel = UpisPredmetViewModel()
+
     private lateinit var spinnerGodina: Spinner
     private lateinit var spinnerGodinaAdapter: ArrayAdapter<String>
     private val listaGodina = arrayListOf("Odaberite godinu", "1", "2", "3", "4", "5")
@@ -28,8 +30,6 @@ class FragmentPredmeti : Fragment() {
     private val listaGrupa: ArrayList<String> = arrayListOf()
 
     private lateinit var dodajPredmetDugme: Button
-
-    private var upisViewModel = UpisPredmetViewModel()
 
     private var odabraniPredmet = ""
     private var odabranaGrupa = ""
@@ -67,7 +67,7 @@ class FragmentPredmeti : Fragment() {
                             listaPredmeta.clear()
                             listaPredmeta.add("Odaberite predmet")
                             listaPredmeta.addAll(
-                                    upisViewModel.getNeupisani(odabranaGodina.toInt())
+                                    upisViewModel.getNeupisaniNazivi(odabranaGodina.toInt())
                             )
                             spinnerPredmet.setSelection(0)
                             spinnerPredmetAdapter.notifyDataSetChanged()
@@ -94,7 +94,7 @@ class FragmentPredmeti : Fragment() {
                         spinnerGrupa.isEnabled = true
                         listaGrupa.clear()
                         listaGrupa.add("Odaberite grupu")
-                        listaGrupa.addAll(upisViewModel.getGroupsByPredmet(odabraniPredmet))
+                        listaGrupa.addAll(upisViewModel.getNaziviGroupaZaPredmet(odabraniPredmet))
                         spinnerGrupa.setSelection(0)
                         spinnerGrupaAdapter.notifyDataSetChanged()
                     } else {
@@ -160,7 +160,7 @@ class FragmentPredmeti : Fragment() {
             val poruka = "Uspješno ste upisani u grupu " + odabranaGrupa +
                     " predmeta " + odabraniPredmet + "!"
 
-            val fragmentPoruka = FragmentPoruka(poruka)
+            val fragmentPoruka = FragmentPoruka.newInstance(poruka)
             fragmentPoruka.arguments = bundle
             openFragment(fragmentPoruka)
         }

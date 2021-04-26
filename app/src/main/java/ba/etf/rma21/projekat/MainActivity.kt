@@ -34,10 +34,8 @@ class MainActivity : AppCompatActivity() {
                         val poruka = "Završili ste kviz " +
                                 pitanjeKvizViewModel.getOdabraniKviz().naziv +
                                 " sa tačnosti " + rezultatKviza
-
                         pitanjeKvizViewModel.getOdabraniKviz().zavrsen = true
-
-                        openFragment(FragmentPoruka(poruka))
+                        openFragment(FragmentPoruka.newInstance(poruka))
                         return@OnNavigationItemSelectedListener true
                     }
                     R.id.zaustaviKviz -> {
@@ -80,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         }
          */
     }
+
 
     fun getBottomNavigation(): BottomNavigationView = bottomNavigation
 

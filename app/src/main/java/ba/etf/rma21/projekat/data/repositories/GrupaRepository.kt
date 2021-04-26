@@ -10,5 +10,15 @@ class GrupaRepository {
         fun getGroupsByPredmet(nazivPredmeta: String): List<Grupa> {
             return sveGrupe.filter { grupa -> grupa.nazivPredmeta.equals(nazivPredmeta) }
         }
+
+        fun getNaziviGroupaZaPredmet(nazivPredmeta: String): List<String> {
+            val rezultat: ArrayList<String> = arrayListOf()
+
+            for (grupa in sveGrupe)
+                if (grupa.nazivPredmeta.equals(nazivPredmeta))
+                    rezultat.add(grupa.naziv)
+
+            return rezultat
+        }
     }
 }

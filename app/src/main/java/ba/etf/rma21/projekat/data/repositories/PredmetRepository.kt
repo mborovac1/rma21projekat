@@ -27,5 +27,14 @@ class PredmetRepository {
 
             return listaPredmeta
         }
+
+        fun getNeupisaniNazivi(godina: Int): List<String> {
+            val neupisaniPredmeti = getNeupisani(godina)
+            val rezultat: ArrayList<String> = arrayListOf()
+
+            neupisaniPredmeti.forEach{predmet -> rezultat.add(predmet.naziv)}
+
+            return rezultat
+        }
     }
 }

@@ -13,48 +13,15 @@ class PitanjeKvizViewModel {
 
     fun postaviOdgovor(nazivPitanja: String, nazivKviza: String, nazivPredmeta: String,
                        pozicija: Int) {
-        val sve = PitanjeKvizRepository.getAll()
-
-        for (pitanjeKviz in sve) {
-            if (pitanjeKviz.naziv.equals(nazivPitanja) &&
-                    pitanjeKviz.predmet.equals(nazivPredmeta) &&
-                    pitanjeKviz.kviz.equals(nazivKviza)) {
-                        pitanjeKviz.odabraniOdgovor = pozicija
-            }
-        }
+        PitanjeKvizRepository.postaviOdgovor(nazivPitanja, nazivKviza, nazivPredmeta, pozicija)
     }
 
     fun getOdgovorZaPitanje(nazivPitanja: String, nazivKviza: String, nazivPredmeta: String): Int {
-        val sve = PitanjeKvizRepository.getAll()
-
-        for (pitanjeKviz in sve) {
-            if (pitanjeKviz.naziv.equals(nazivPitanja) &&
-                    pitanjeKviz.predmet.equals(nazivPredmeta) &&
-                    pitanjeKviz.kviz.equals(nazivKviza)) {
-                return pitanjeKviz.odabraniOdgovor
-            }
-        }
-        return -2 // nece se nikad desiti
+        return PitanjeKvizRepository.getOdgovorZaPitanje(nazivPitanja, nazivKviza, nazivPredmeta)
     }
 
     fun getRezultatKviza(nazivKviza: String, nazivPredmeta: String): Double {
-        val sve = PitanjeKvizRepository.getPitanja(nazivKviza, nazivPredmeta)
-        val svaPitanja = PitanjeKvizRepository.getAll()
-        var brojTacnih = 0
-
-        for (pitanje in sve) {
-            for (pitanjeKviz in svaPitanja) {
-                if (pitanjeKviz.naziv.equals(pitanje.naziv)) {
-                    if (pitanjeKviz.odabraniOdgovor == pitanje.tacan)
-                        brojTacnih++
-                }
-            }
-        }
-
-        if (brojTacnih == 0 || sve.size == 0)
-            return 0.0
-
-        return String.format("%.1f", (brojTacnih.toDouble() / sve.size) * 100).toDouble()
+        return PitanjeKvizRepository.getRezultatKviza(nazivKviza, nazivPredmeta)
     }
 
     fun getOdabraniKviz(): Kviz = PitanjeKvizRepository.odabraniKviz!!

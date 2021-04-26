@@ -13,7 +13,6 @@ import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 
 class FragmentPoruka(tekst: String) : Fragment() {
     private val tekst = tekst
-    private val pitanjeKvizViewModel = PitanjeKvizViewModel()
     private lateinit var poruka: TextView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -22,12 +21,10 @@ class FragmentPoruka(tekst: String) : Fragment() {
         activity.popraviNavigacijskeOpcije(R.id.kvizovi)
 
         // postavljanje godine nakon upisa
-        val bundle = this.arguments as Bundle?
+        val bundle = this.arguments
         val odabranaGodina: String? = bundle?.getString("odabrana_godina")
         if (odabranaGodina != null)
             KorisnikRepository.setGodinaStudija(odabranaGodina.toInt())
-
-        val upisPoruka = bundle?.getString("upis_poruka")
 
         var view = inflater.inflate(R.layout.poruka_fragment, container, false)
 
@@ -35,5 +32,9 @@ class FragmentPoruka(tekst: String) : Fragment() {
         poruka.text = tekst
 
         return view
+    }
+
+    companion object {
+        fun newInstance(tekst: String): FragmentPoruka = FragmentPoruka(tekst)
     }
 }

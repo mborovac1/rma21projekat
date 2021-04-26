@@ -17,8 +17,8 @@ import ba.etf.rma21.projekat.viewmodel.KvizListViewModel
 import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 
 class FragmentKvizovi : Fragment() {
-    private var kvizListViewModel = KvizListViewModel()
-    private var pitanjeKvizViewModel = PitanjeKvizViewModel()
+    private val kvizListViewModel = KvizListViewModel()
+    private val pitanjeKvizViewModel = PitanjeKvizViewModel()
 
     private lateinit var kvizovi: RecyclerView
     private lateinit var kvizAdapter: KvizListAdapter
@@ -81,14 +81,16 @@ class FragmentKvizovi : Fragment() {
     }
 
     private fun showKvizDetails(kviz: Kviz) {
-        val fragmentPokusaj = FragmentPokusaj(pitanjeKvizViewModel
-                .getPitanja(kviz.naziv, kviz.nazivPredmeta))
+        if (kvizListViewModel.getMojiKvizovi().contains(kviz)) {
+            val fragmentPokusaj = FragmentPokusaj.newInstance(pitanjeKvizViewModel
+                    .getPitanja(kviz.naziv, kviz.nazivPredmeta))
 
-        val bundle = Bundle()
-        bundle.putString("naziv_kviza", kviz.naziv)
-        bundle.putString("predmet_kviza", kviz.nazivPredmeta)
-        fragmentPokusaj.arguments = bundle
+            val bundle = Bundle()
+            bundle.putString("naziv_kviza", kviz.naziv)
+            bundle.putString("predmet_kviza", kviz.nazivPredmeta)
+            fragmentPokusaj.arguments = bundle
 
-        openFragment(fragmentPokusaj)
+            openFragment(fragmentPokusaj)
+        }
     }
 }

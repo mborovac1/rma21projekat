@@ -16,19 +16,19 @@ import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import com.google.android.material.navigation.NavigationView
 
 class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
+    private var listaPitanja: List<Pitanje> = listaPitanja
+
     private val pitanjeKvizViewModel = PitanjeKvizViewModel()
 
-    private var listaPitanja: List<Pitanje> = listaPitanja
     private lateinit var navigacijaPitanja: NavigationView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-
-        var bundle = this.arguments as Bundle
-        var nazivKviza = bundle.getString("naziv_kviza")
-        var nazivPredmeta = bundle.getString("predmet_kviza")
-
         (activity as MainActivity).popraviNavigacijskeOpcije(R.id.predajKviz)
+
+        val bundle = this.arguments as Bundle
+        val nazivKviza = bundle.getString("naziv_kviza")
+        val nazivPredmeta = bundle.getString("predmet_kviza")
 
         var view = inflater.inflate(R.layout.pokusaj_fragment, container, false)
 
@@ -36,7 +36,6 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
 
         for (i in 0 until listaPitanja.size)
             navigacijaPitanja.menu.add(R.id.grupa, i, i, (i + 1).toString())
-
 
         if (pitanjeKvizViewModel.getOdabraniKviz().zavrsen) {
             (activity as MainActivity).popraviNavigacijskeOpcije(R.id.kvizovi)
@@ -63,7 +62,6 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
             }
 
             navigacijaPitanja.menu.add(R.id.grupa, listaPitanja.size, listaPitanja.size, "Rezultat")
-
         } else if (pitanjeKvizViewModel.getOdabraniKviz().prekinut) {
             for (i in 0 until listaPitanja.size) {
                 val menuItem = navigacijaPitanja.menu[i]
@@ -87,6 +85,15 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
             }
         }
 
+        val fragmentPitanje = FragmentPitanje(listaPitanja[0])
+        val bundleNovi = Bundle()
+        bundleNovi.putInt("navigacijaPitanja_id", 0)
+        bundleNovi.putString("naziv_kviza", nazivKviza)
+        bundleNovi.putString("predmet_kviza", nazivPredmeta)
+        bundleNovi.putInt("rezultat_id", listaPitanja.size)
+        fragmentPitanje.arguments = bundleNovi
+        openFragment(fragmentPitanje)
+
         navigacijaPitanja.setNavigationItemSelectedListener {
             val bundleNovi = Bundle()
             bundleNovi.putInt("navigacijaPitanja_id", it.itemId)
@@ -101,7 +108,7 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
                 val poruka = "Završili ste kviz " +
                         pitanjeKvizViewModel.getOdabraniKviz().naziv +
                         " sa tačnosti " + rezultatKviza
-                val fragmentPoruka = FragmentPoruka(poruka)
+                val fragmentPoruka = FragmentPoruka.newInstance(poruka)
                 val transaction = (activity as MainActivity).supportFragmentManager
                         .beginTransaction()
                 transaction.replace(R.id.container, fragmentPoruka)
@@ -117,6 +124,10 @@ class FragmentPokusaj(listaPitanja: List<Pitanje>) : Fragment() {
             true
         }
         return view
+    }
+
+    companion object {
+        fun newInstance(listaPitanja: List<Pitanje>): FragmentPokusaj = FragmentPokusaj(listaPitanja)
     }
 
     private fun openFragment(fragment: Fragment) {
