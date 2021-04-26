@@ -3,22 +3,22 @@
 
     <item
         android:id="@+id/kvizovi"
-        android:icon="@android:drawable/star_big_on"
+        android:icon="@drawable/home_icon"
         android:title="Kvizovi"/>
 
     <item
         android:id="@+id/predmeti"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/add_icon"
         android:title="Predmeti"/>
 
     <item
         android:id="@+id/predajKviz"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:icon="@drawable/done_icon"
         android:title="Predaj kviz"/>
 
     <item
         android:id="@+id/zaustaviKviz"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:icon="@drawable/clear_icon"
         android:title="Zaustavi kviz"/>
 
     <group
