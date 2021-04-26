@@ -28,7 +28,7 @@ class FragmentPoruka(tekst: String) : Fragment() {
 
         var view = inflater.inflate(R.layout.poruka_fragment, container, false)
 
-        poruka = view.findViewById(R.id.poruka)
+        poruka = view.findViewById(R.id.tvPoruka)
         poruka.text = tekst
 
         return view
