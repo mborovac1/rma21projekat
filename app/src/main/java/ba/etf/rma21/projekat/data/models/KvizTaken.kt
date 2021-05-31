@@ -1,4 +1,4 @@
 package ba.etf.rma21.projekat.data.models
 
-data class Pitanje(val id: Int) {
+data class KvizTaken(val id: Int) {
 }
