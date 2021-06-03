@@ -15,9 +15,10 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.models.Pitanje
-import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
+//import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import com.google.android.material.navigation.NavigationView
 
+/*
 class FragmentPitanje(pitanje: Pitanje) : Fragment() {
     private val pitanje = pitanje
 
@@ -125,3 +126,4 @@ class FragmentPitanje(pitanje: Pitanje) : Fragment() {
         return view
     }
 }
+*/

@@ -11,7 +11,6 @@ import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
-import ba.etf.rma21.projekat.data.repositories.KorisnikRepository
 import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
 
 class FragmentPredmeti : Fragment() {
@@ -41,60 +40,64 @@ class FragmentPredmeti : Fragment() {
 
         }
 
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?,
-                                    position: Int, id: Long) {
+        override fun onItemSelected(
+            parent: AdapterView<*>?, view: View?,
+            position: Int, id: Long
+        ) {
             var bundle = Bundle()
-            var fragmentKvizovi = FragmentKvizovi.newInstance()
+            //var fragmentKvizovi = FragmentKvizovi.newInstance()
 
             if (parent != null) { // da ne moram pisati npr parent?.id umjestp parent.id
                 if (parent.id == R.id.odabirGodina) {
+                    /*
                     if (KorisnikRepository.getGodinaStudija() != 0) {
                         spinnerGodina.isEnabled = true
                         spinnerGodina.setSelection(KorisnikRepository.getGodinaStudija())
                         KorisnikRepository.setGodinaStudija(0)
-                    } else {
-                        odabranaGodina = spinnerGodina.selectedItem.toString()
-                        bundle.putString("odabrana_godina", odabranaGodina)
-                        if (!odabranaGodina.equals("Odaberite godinu")) {
-                            dodajPredmetDugme.isEnabled = false
-                            spinnerPredmet.isEnabled = true
-                            listaGrupa.clear()
-                            listaGrupa.add("")
-                            spinnerGrupa.setSelection(0)
-                            spinnerGrupa.isEnabled = false
-                            spinnerGrupaAdapter.notifyDataSetChanged()
+                    } else { */
+                    odabranaGodina = spinnerGodina.selectedItem.toString()
+                    bundle.putString("odabrana_godina", odabranaGodina)
+                    if (!odabranaGodina.equals("Odaberite godinu")) {
+                        dodajPredmetDugme.isEnabled = false
+                        spinnerPredmet.isEnabled = true
+                        listaGrupa.clear()
+                        listaGrupa.add("")
+                        spinnerGrupa.setSelection(0)
+                        spinnerGrupa.isEnabled = false
+                        spinnerGrupaAdapter.notifyDataSetChanged()
 
-                            listaPredmeta.clear()
-                            listaPredmeta.add("Odaberite predmet")
-                            listaPredmeta.addAll(
-                                    upisViewModel.getNeupisaniNazivi(odabranaGodina.toInt())
-                            )
-                            spinnerPredmet.setSelection(0)
-                            spinnerPredmetAdapter.notifyDataSetChanged()
-                        } else if (spinnerPredmet.isEnabled) {
-                            listaPredmeta.clear()
-                            listaPredmeta.add("")
-                            spinnerPredmet.setSelection(0)
-                            spinnerPredmet.isEnabled = false
-                            spinnerPredmetAdapter.notifyDataSetChanged()
+                        listaPredmeta.clear()
+                        listaPredmeta.add("Odaberite predmet")
+                        /*listaPredmeta.addAll(
+                                upisViewModel.getNeupisaniNazivi(odabranaGodina.toInt())
+                        )*/
+                        spinnerPredmet.setSelection(0)
+                        spinnerPredmetAdapter.notifyDataSetChanged()
+                    } else if (spinnerPredmet.isEnabled) {
+                        listaPredmeta.clear()
+                        listaPredmeta.add("")
+                        spinnerPredmet.setSelection(0)
+                        spinnerPredmet.isEnabled = false
+                        spinnerPredmetAdapter.notifyDataSetChanged()
 
-                            listaGrupa.clear()
-                            listaGrupa.add("")
-                            spinnerGrupa.setSelection(0)
-                            spinnerGrupa.isEnabled = false
-                            spinnerGrupaAdapter.notifyDataSetChanged()
-                        }
+                        listaGrupa.clear()
+                        listaGrupa.add("")
+                        spinnerGrupa.setSelection(0)
+                        spinnerGrupa.isEnabled = false
+                        spinnerGrupaAdapter.notifyDataSetChanged()
                     }
+                    //}
                 } else if (parent.id == R.id.odabirPredmet) {
                     odabraniPredmet = spinnerPredmet.selectedItem.toString()
                     bundle.putString("odabrani_predmet", odabraniPredmet)
 
                     if (!odabraniPredmet.equals("Odaberite predmet") &&
-                            !odabraniPredmet.equals("")) {
+                        !odabraniPredmet.equals("")
+                    ) {
                         spinnerGrupa.isEnabled = true
                         listaGrupa.clear()
                         listaGrupa.add("Odaberite grupu")
-                        listaGrupa.addAll(upisViewModel.getNaziviGroupaZaPredmet(odabraniPredmet))
+                        //listaGrupa.addAll(upisViewModel.getNaziviGroupaZaPredmet(odabraniPredmet))
                         spinnerGrupa.setSelection(0)
                         spinnerGrupaAdapter.notifyDataSetChanged()
                     } else {
@@ -113,12 +116,14 @@ class FragmentPredmeti : Fragment() {
                 }
             }
 
-            fragmentKvizovi.arguments = bundle
+            //fragmentKvizovi.arguments = bundle
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val activity = activity as MainActivity
         activity.popraviNavigacijskeOpcije(R.id.predmeti)
 
@@ -130,16 +135,22 @@ class FragmentPredmeti : Fragment() {
         spinnerGrupa = view.findViewById(R.id.odabirGrupa)
         dodajPredmetDugme = view.findViewById(R.id.dodajPredmetDugme)
 
-        spinnerGodinaAdapter = ArrayAdapter(view.context,
-                android.R.layout.simple_list_item_1, listaGodina)
+        spinnerGodinaAdapter = ArrayAdapter(
+            view.context,
+            android.R.layout.simple_list_item_1, listaGodina
+        )
         spinnerGodina.adapter = spinnerGodinaAdapter
 
-        spinnerPredmetAdapter = ArrayAdapter(view.context,
-                android.R.layout.simple_list_item_1, listaPredmeta)
+        spinnerPredmetAdapter = ArrayAdapter(
+            view.context,
+            android.R.layout.simple_list_item_1, listaPredmeta
+        )
         spinnerPredmet.adapter = spinnerPredmetAdapter
 
-        spinnerGrupaAdapter = ArrayAdapter(view.context,
-                android.R.layout.simple_list_item_1, listaGrupa)
+        spinnerGrupaAdapter = ArrayAdapter(
+            view.context,
+            android.R.layout.simple_list_item_1, listaGrupa
+        )
         spinnerGrupa.adapter = spinnerGrupaAdapter
 
         // isti listener za sva tri spinnera
@@ -152,7 +163,7 @@ class FragmentPredmeti : Fragment() {
         dodajPredmetDugme.isEnabled = false
 
         dodajPredmetDugme.setOnClickListener {
-            upisViewModel.upisiPredmet(odabraniPredmet, odabranaGrupa, odabranaGodina)
+            //upisViewModel.upisiPredmet(odabraniPredmet, odabranaGrupa, odabranaGodina)
 
             val bundle = Bundle()
             bundle.putString("odabrana_godina", odabranaGodina)

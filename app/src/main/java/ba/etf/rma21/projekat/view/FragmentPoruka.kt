@@ -8,8 +8,6 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
-import ba.etf.rma21.projekat.data.repositories.KorisnikRepository
-import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 
 class FragmentPoruka(tekst: String) : Fragment() {
     private val tekst = tekst
@@ -23,8 +21,11 @@ class FragmentPoruka(tekst: String) : Fragment() {
         // postavljanje godine nakon upisa
         val bundle = this.arguments
         val odabranaGodina: String? = bundle?.getString("odabrana_godina")
+        /*
         if (odabranaGodina != null)
             KorisnikRepository.setGodinaStudija(odabranaGodina.toInt())
+
+         */
 
         var view = inflater.inflate(R.layout.poruka_fragment, container, false)
 

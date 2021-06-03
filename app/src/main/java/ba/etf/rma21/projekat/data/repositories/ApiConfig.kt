@@ -4,7 +4,7 @@ class ApiConfig {
     companion object {
         var baseURL: String = "https://rma21-etf.herokuapp.com"
 
-        fun postaviBaseURL(baseUrl: String): Unit {
+        fun postaviBaseURL(baseUrl: String) {
             this.baseURL = baseUrl
         }
     }

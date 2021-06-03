@@ -3,8 +3,25 @@ package ba.etf.rma21.projekat.viewmodel
 import ba.etf.rma21.projekat.data.models.Kviz
 import ba.etf.rma21.projekat.data.models.Pitanje
 import ba.etf.rma21.projekat.data.repositories.PitanjeKvizRepository
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+/*
 class PitanjeKvizViewModel {
+
+    val scope = CoroutineScope(Job() + Dispatchers.Main)
+
+    fun getPitanja(idKviza: Int): List<Pitanje>? {
+        scope.launch {
+            val rezultat = PitanjeKvizRepository.getPitanja(idKviza)
+
+
+
+        }
+    }
+
+
     fun getPitanja(nazivKviza: String, nazivPredmeta: String): List<Pitanje> {
         return PitanjeKvizRepository.getPitanja(nazivKviza, nazivPredmeta)
     }
@@ -29,4 +46,5 @@ class PitanjeKvizViewModel {
     fun setOdabraniKviz(kviz: Kviz) {
         PitanjeKvizRepository.odabraniKviz = kviz
     }
-}
+
+} */

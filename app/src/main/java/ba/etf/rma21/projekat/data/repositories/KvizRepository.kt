@@ -1,43 +1,100 @@
 package ba.etf.rma21.projekat.data.repositories
 
 import ba.etf.rma21.projekat.data.models.Kviz
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.util.*
 
 class KvizRepository {
     companion object {
-        init {
+        private val danasnjiDatum: Date = Calendar.getInstance().time
 
+        suspend fun getMyKvizes(): List<Kviz> {
+            return withContext(Dispatchers.IO) {
+                val rezultat = arrayListOf<Kviz>()
+                val mojeGrupe = PredmetIGrupaRepository.getUpisaneGrupe()
+                val mojiKvizovi = getAll()
+
+                if (mojiKvizovi == null || mojeGrupe == null)
+                    return@withContext emptyList<Kviz>()
+                else {
+                    for (kviz in mojiKvizovi) {
+                        for (grupa in mojeGrupe) {
+                            if (kviz.id == grupa.id) {
+                                rezultat.add(kviz)
+                            }
+                        }
+                    }
+                    return@withContext rezultat
+                }
+            }
         }
 
-        fun getMyKvizes(): List<Kviz> {
-            return emptyList()
+        suspend fun getDone(): List<Kviz> {
+            return withContext(Dispatchers.IO) {
+                val rezultat = arrayListOf<Kviz>()
+                val mojiKvizovi = getMyKvizes()
+
+                for (kviz in mojiKvizovi) {
+                    if (kviz.osvojeniBodovi != null) {
+                        rezultat.add(kviz)
+                    }
+                }
+                return@withContext rezultat
+
+            }
         }
 
-        fun getAl1l(): List<Kviz> {
-            return emptyList()
+        suspend fun getFuture(): List<Kviz> {
+            return withContext(Dispatchers.IO) {
+                val rezultat = arrayListOf<Kviz>()
+                val mojiKvizovi = getMyKvizes()
+
+
+                for (kviz in mojiKvizovi) {
+                    if (kviz.datumPocetka.after(danasnjiDatum)) {
+                        rezultat.add(kviz)
+                    }
+                }
+                return@withContext rezultat
+
+            }
         }
 
-        fun getDone(): List<Kviz> {
-            return emptyList()
-        }
+        suspend fun getNotTaken(): List<Kviz> {
+            return withContext(Dispatchers.IO) {
+                val rezultat = arrayListOf<Kviz>()
+                val mojiKvizovi = getMyKvizes()
 
-        fun getFuture(): List<Kviz> {
-            return emptyList()
-        }
+                for (kviz in mojiKvizovi) {
+                    if (kviz.datumPocetka.before(danasnjiDatum) &&
+                        kviz.datumRada == null &&
+                        kviz.osvojeniBodovi == null
+                    ) {
+                        rezultat.add(kviz)
+                    }
+                }
+                return@withContext rezultat
 
-        fun getNotTaken(): List<Kviz> {
-            return emptyList()
+            }
         }
 
         suspend fun getAll(): List<Kviz>? {
-            return emptyList()
+            return withContext(Dispatchers.IO) {
+                val response = ApiAdapter.retrofit.getKvizovi()
+                val responseBody = response.body()
+                return@withContext responseBody
+            }
         }
 
         suspend fun getById(id: Int): Kviz? {
-            return null
+            return withContext(Dispatchers.IO) {
+                val response = ApiAdapter.retrofit.getKvizById(id)
+                val responseBody = response.body()
+                return@withContext responseBody
+            }
         }
 
-        suspend fun getUpisani(): List<Kviz>? {
-            return emptyList()
-        }
+        suspend fun getUpisani(): List<Kviz>? = getMyKvizes()
     }
 }

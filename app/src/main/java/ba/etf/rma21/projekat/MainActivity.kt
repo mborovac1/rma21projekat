@@ -6,11 +6,11 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.view.FragmentKvizovi
 import ba.etf.rma21.projekat.view.FragmentPoruka
 import ba.etf.rma21.projekat.view.FragmentPredmeti
-import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
+//import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-    private var pitanjeKvizViewModel = PitanjeKvizViewModel()
+    //private var pitanjeKvizViewModel = PitanjeKvizViewModel()
 
     private lateinit var bottomNavigation: BottomNavigationView
 
@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
                         openFragment(fragmentKvizovi)
                         return@OnNavigationItemSelectedListener true
                     }
+                    /*
                     R.id.predmeti -> {
                         val fragmentPredmeti = FragmentPredmeti.newInstance()
                         openFragment(fragmentPredmeti)
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity() {
                         bottomNavigation.selectedItemId = R.id.kvizovi
                         return@OnNavigationItemSelectedListener true
                     }
+                    */
                 }
                 false
             }
@@ -58,6 +60,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.selectedItemId = R.id.kvizovi
         val fragmentKvizovi = FragmentKvizovi.newInstance()
         openFragment(fragmentKvizovi)
+
     }
 
     private fun openFragment(fragment: Fragment) {
