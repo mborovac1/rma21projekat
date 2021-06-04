@@ -1,10 +1,7 @@
 package ba.etf.rma21.projekat.viewmodel
 
-import ba.etf.rma21.projekat.data.models.Grupa
 import ba.etf.rma21.projekat.data.models.Kviz
-import ba.etf.rma21.projekat.data.models.Predmet
 import ba.etf.rma21.projekat.data.repositories.KvizRepository
-import ba.etf.rma21.projekat.data.repositories.PredmetIGrupaRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -68,5 +65,6 @@ class KvizListViewModel {
         }
     }
 
-    suspend fun getPredmetiZaKviz(kvizId: Int): List<Predmet>? = PredmetIGrupaRepository.getPredmetiZaKviz(kvizId)
+    suspend fun getKvizoviByGrupa(idGrupe: Int): List<Kviz> =
+        KvizRepository.getKvizoviByGrupa(idGrupe)!!
 }

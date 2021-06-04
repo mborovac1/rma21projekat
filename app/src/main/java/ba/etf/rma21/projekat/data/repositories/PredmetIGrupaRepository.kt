@@ -2,6 +2,7 @@ package ba.etf.rma21.projekat.data.repositories
 
 import ba.etf.rma21.projekat.data.models.Grupa
 import ba.etf.rma21.projekat.data.models.Predmet
+import ba.etf.rma21.projekat.viewmodel.KvizListViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -42,8 +43,7 @@ class PredmetIGrupaRepository {
         suspend fun upisiUGrupu(idGrupa: Int): Boolean? {
             return withContext(Dispatchers.IO) {
                 val response = ApiAdapter.retrofit.upisiUGrupu(idGrupa, AccountRepository.acHash)
-                val responseBody = response.body()
-                val poruka: String = responseBody!!.message
+                val poruka: String = response.message
 
                 if (poruka.contains("je dodan u grupu")) {
                     return@withContext true
@@ -77,7 +77,6 @@ class PredmetIGrupaRepository {
             return withContext(Dispatchers.IO) {
                 val response = ApiAdapter.retrofit.getGrupeZaKviz(kvizId)
                 val responseBody = response.body()
-
                 return@withContext responseBody
             }
         }
@@ -100,6 +99,113 @@ class PredmetIGrupaRepository {
                     }
                     return@withContext rezultat
                 }
+            }
+        }
+
+        suspend fun getPredmetById(predmetId: Int): Predmet? {
+            return withContext(Dispatchers.IO) {
+                val response = ApiAdapter.retrofit.getPredmetById(predmetId)
+                val responseBody = response.body()
+                return@withContext responseBody
+            }
+        }
+
+        suspend fun getPredmetByNaziv(nazivPredmeta: String): Predmet? {
+            return withContext(Dispatchers.IO) {
+                val sviPredmeti = getPredmeti()
+
+                if (sviPredmeti != null) {
+                    for (predmet in sviPredmeti) {
+                        if (predmet.naziv.equals(nazivPredmeta)) {
+                            return@withContext predmet
+                        }
+                    }
+                }
+
+                return@withContext null
+            }
+        }
+
+        suspend fun getNeupisaneGrupeZaPredmet(idPredmeta: Int): List<Grupa> {
+            return withContext(Dispatchers.IO) {
+                val sveGrupeZaPredmet = getGrupeZaPredmet(idPredmeta)
+                val upisaneGrupe = getUpisaneGrupe()
+                val rezultat = arrayListOf<Grupa>()
+
+                if (sveGrupeZaPredmet != null && upisaneGrupe != null) {
+                    for (grupa in sveGrupeZaPredmet) {
+                        if (!upisaneGrupe.contains(grupa)) {
+                            rezultat.add(grupa)
+                        }
+                    }
+                }
+                return@withContext rezultat
+            }
+        }
+
+        suspend fun getPredmetiByGodina(godina: Int): List<Predmet> {
+            return withContext(Dispatchers.IO) {
+                val predmeti = getPredmeti()
+                val rezultat = arrayListOf<Predmet>()
+
+                for (predmet in predmeti!!) {
+                    if (predmet.godina == godina) {
+                        rezultat.add(predmet)
+                    }
+                }
+
+                return@withContext rezultat
+            }
+        }
+
+        suspend fun getUpisaniPredmeti(): List<Predmet> {
+            return withContext(Dispatchers.IO) {
+                val kvizListViewModel = KvizListViewModel()
+                val mojeGrupe = getUpisaneGrupe()
+                val rezultat = arrayListOf<Predmet>()
+
+                for (grupa in mojeGrupe!!) {
+                    val kvizovi = kvizListViewModel.getKvizoviByGrupa(grupa.id)
+                    for (kviz in kvizovi) {
+                        val predmeti = getPredmetiZaKviz(kviz.id)
+                        for (predmet in predmeti!!) {
+                            rezultat.add(predmet)
+                        }
+                    }
+                }
+
+                return@withContext rezultat
+            }
+        }
+
+        suspend fun getNeupisaniPredmetiNazivi(godina: Int): List<String> {
+            return withContext(Dispatchers.IO) {
+                val rezultat = arrayListOf<String>()
+                val predmetiByGodina = getPredmetiByGodina(godina)
+                val upisaniPredmeti = getUpisaniPredmeti()
+
+                for (predmet in predmetiByGodina) {
+                    if (!upisaniPredmeti.contains(predmet)) {
+                        rezultat.add(predmet.naziv)
+                    }
+                }
+
+                return@withContext rezultat
+            }
+        }
+
+        suspend fun getGrupaZaPredmet(idPredmeta: Int, nazivGrupe: String): Grupa? {
+            return withContext(Dispatchers.IO) {
+                val grupeZaPredmet = getGrupeZaPredmet(idPredmeta)!!
+
+                for (grupa in grupeZaPredmet) {
+                    if (grupa.naziv.equals(nazivGrupe)) {
+                        return@withContext grupa
+                    }
+
+                }
+                return@withContext null
+
             }
         }
     }

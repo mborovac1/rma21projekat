@@ -1,22 +1,24 @@
 package ba.etf.rma21.projekat.viewmodel
 
+import ba.etf.rma21.projekat.data.models.Grupa
+import ba.etf.rma21.projekat.data.models.Predmet
+import ba.etf.rma21.projekat.data.repositories.PredmetIGrupaRepository
+
 class UpisPredmetViewModel {
-    /*
-    fun getAll(): List<Predmet> =  PredmetRepository.getAll()
+    suspend fun getPredmetiZaKviz(kvizId: Int): List<Predmet>? =
+        PredmetIGrupaRepository.getPredmetiZaKviz(kvizId)
 
-    fun getUpisani(): List<Predmet> = PredmetRepository.getUpisani()
+    suspend fun getNeupisaniPredmetiNazivi(godina: Int): List<String> =
+        PredmetIGrupaRepository.getNeupisaniPredmetiNazivi(godina)
 
-    fun getNeupisaniNazivi(godina: Int): List<String> {
-        return PredmetRepository.getNeupisaniNazivi(godina)
-    }
+    suspend fun upisiUGrupu(idGrupa: Int): Boolean? = PredmetIGrupaRepository.upisiUGrupu(idGrupa)
 
-    fun getNaziviGroupaZaPredmet(nazivPredmeta: String): List<String> {
-        return GrupaRepository.getNaziviGroupaZaPredmet(nazivPredmeta)
-    }
+    suspend fun getGrupaZaPredmet(idPredmeta: Int, nazivGrupe: String): Grupa =
+        PredmetIGrupaRepository.getGrupaZaPredmet(idPredmeta, nazivGrupe)!!
 
-    fun upisiPredmet(nazivPredmeta: String, nazivGrupe: String, godinaPredmeta: String) {
-        KorisnikRepository.dodajPredmet(Predmet(nazivPredmeta, godinaPredmeta.toInt()))
-        KorisnikRepository.dodajGrupu(Grupa(nazivGrupe, nazivPredmeta))
-    }
-    */
+    suspend fun getNeupisaneGrupeZaPredmet(idPredmeta: Int): List<Grupa> =
+        PredmetIGrupaRepository.getNeupisaneGrupeZaPredmet(idPredmeta)
+
+    suspend fun getPredmetByNaziv(nazivPredmeta: String): Predmet? =
+        PredmetIGrupaRepository.getPredmetByNaziv(nazivPredmeta)
 }

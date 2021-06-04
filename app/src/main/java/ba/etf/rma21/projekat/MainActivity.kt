@@ -15,41 +15,42 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigation: BottomNavigationView
 
     private val mOnNavigationItemSelectedListener =
-            BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                when (item.itemId) {
-                    R.id.kvizovi -> {
-                        val fragmentKvizovi = FragmentKvizovi.newInstance()
-                        openFragment(fragmentKvizovi)
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    /*
-                    R.id.predmeti -> {
-                        val fragmentPredmeti = FragmentPredmeti.newInstance()
-                        openFragment(fragmentPredmeti)
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.predajKviz -> {
-                        val rezultatKviza = pitanjeKvizViewModel
-                                .getRezultatKviza(pitanjeKvizViewModel.getOdabraniKviz().naziv,
-                                        pitanjeKvizViewModel.getOdabraniKviz().nazivPredmeta)
-                        val poruka = "Završili ste kviz " +
-                                pitanjeKvizViewModel.getOdabraniKviz().naziv +
-                                " sa tačnosti " + rezultatKviza
-                        pitanjeKvizViewModel.getOdabraniKviz().zavrsen = true
-                        openFragment(FragmentPoruka.newInstance(poruka))
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    R.id.zaustaviKviz -> {
-                        pitanjeKvizViewModel.getOdabraniKviz().prekinut = true
-                        val fragmentKvizovi = FragmentKvizovi.newInstance()
-                        openFragment(fragmentKvizovi)
-                        bottomNavigation.selectedItemId = R.id.kvizovi
-                        return@OnNavigationItemSelectedListener true
-                    }
-                    */
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.kvizovi -> {
+                    val fragmentKvizovi = FragmentKvizovi.newInstance()
+                    openFragment(fragmentKvizovi)
+                    return@OnNavigationItemSelectedListener true
                 }
-                false
+
+                R.id.predmeti -> {
+                    val fragmentPredmeti = FragmentPredmeti.newInstance()
+                    openFragment(fragmentPredmeti)
+                    return@OnNavigationItemSelectedListener true
+                }
+                /*
+                R.id.predajKviz -> {
+                    val rezultatKviza = pitanjeKvizViewModel
+                            .getRezultatKviza(pitanjeKvizViewModel.getOdabraniKviz().naziv,
+                                    pitanjeKvizViewModel.getOdabraniKviz().nazivPredmeta)
+                    val poruka = "Završili ste kviz " +
+                            pitanjeKvizViewModel.getOdabraniKviz().naziv +
+                            " sa tačnosti " + rezultatKviza
+                    pitanjeKvizViewModel.getOdabraniKviz().zavrsen = true
+                    openFragment(FragmentPoruka.newInstance(poruka))
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.zaustaviKviz -> {
+                    pitanjeKvizViewModel.getOdabraniKviz().prekinut = true
+                    val fragmentKvizovi = FragmentKvizovi.newInstance()
+                    openFragment(fragmentKvizovi)
+                    bottomNavigation.selectedItemId = R.id.kvizovi
+                    return@OnNavigationItemSelectedListener true
+                }
+                */
             }
+            false
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

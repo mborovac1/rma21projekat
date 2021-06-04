@@ -30,7 +30,7 @@ interface Api {
     suspend fun upisiUGrupu(
         @Path("gid") idGrupe: Int,
         @Path("id") hashStudenta: String
-    ): Response<Message>
+    ): Message
 
     @GET("/student/{id}/grupa")
     suspend fun getUpisaneGrupe(
@@ -79,4 +79,14 @@ interface Api {
     suspend fun getGrupeZaKviz(
         @Path("id") idKviza: Int
     ): Response<List<Grupa>>
+
+    @GET("/predmet/{id}")
+    suspend fun getPredmetById(
+        @Path("id") predmetId: Int
+    ): Response<Predmet>
+
+    @GET("/grupa/{id}/kvizovi")
+    suspend fun getKvizoviByGrupa(
+        @Path("id") idGrupe: Int
+    ): Response<List<Kviz>>
 }

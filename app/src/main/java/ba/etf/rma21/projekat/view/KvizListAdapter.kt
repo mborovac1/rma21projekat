@@ -10,40 +10,48 @@ import androidx.recyclerview.widget.RecyclerView
 import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.models.Kviz
 import ba.etf.rma21.projekat.data.models.Predmet
-import ba.etf.rma21.projekat.viewmodel.KvizListViewModel
+import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
 
-class KvizListAdapter (
-        private var kvizovi: List<Kviz>,
-        private val onItemClicked: (kviz: Kviz) -> Unit
+class KvizListAdapter(
+    private var kvizovi: List<Kviz>,
+    private val onItemClicked: (kviz: Kviz) -> Unit
 ) : RecyclerView.Adapter<KvizListAdapter.KvizViewHolder>() {
     private lateinit var context: Context
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KvizViewHolder {
         val view = LayoutInflater
-                .from(parent.context)
-                .inflate(R.layout.item_kviz, parent, false)
+            .from(parent.context)
+            .inflate(R.layout.item_kviz, parent, false)
         context = view.context
         return KvizViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: KvizViewHolder, position: Int) {
-        val kvizListViewModel = KvizListViewModel()
+        val upisPredmetViewModel = UpisPredmetViewModel()
 
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             var listaPredmeta = arrayListOf<Predmet>()
-            listaPredmeta = kvizListViewModel.getPredmetiZaKviz(kvizovi[position].id) as ArrayList<Predmet>
+            listaPredmeta = upisPredmetViewModel.getPredmetiZaKviz(kvizovi[position].id)!!
+                .distinctBy { predmet -> predmet.id } as ArrayList<Predmet>
 
             var naziviPredmeta = ""
-            for (predmet in listaPredmeta) {
-                naziviPredmeta += predmet.naziv + " "
+
+            for (i in 0 until listaPredmeta.size) {
+                naziviPredmeta += listaPredmeta[i].naziv
+                if (i != listaPredmeta.size - 1) {
+                    naziviPredmeta += ", "
+                }
             }
 
-            holder.nazivPredmeta.text = naziviPredmeta
+            withContext(Dispatchers.Main) {
+                holder.nazivPredmeta.text = naziviPredmeta
+            }
         }
 
         holder.nazivKviza.text = kvizovi[position].naziv
@@ -67,8 +75,7 @@ class KvizListAdapter (
             bojaMatch = "plava"
             val datum = kvizovi[position].datumRada
             holder.datumKviza.text = formatter.format(datum)
-        }
-        else {
+        } else {
             bojaMatch = "crvena"
             val datum = kvizovi[position].datumPocetka
             holder.datumKviza.text = formatter.format(datum)
@@ -76,10 +83,10 @@ class KvizListAdapter (
 
         val context: Context = holder.statusPredmeta.context
         var id: Int = context.resources
-                .getIdentifier(bojaMatch, "drawable", context.packageName)
+            .getIdentifier(bojaMatch, "drawable", context.packageName)
         holder.statusPredmeta.setImageResource(id)
 
-        holder.itemView.setOnClickListener{ onItemClicked(kvizovi[position]) }
+        holder.itemView.setOnClickListener { onItemClicked(kvizovi[position]) }
     }
 
     override fun getItemCount(): Int = kvizovi.size

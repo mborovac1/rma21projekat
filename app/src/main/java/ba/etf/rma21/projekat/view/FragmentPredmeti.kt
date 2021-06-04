@@ -12,9 +12,13 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FragmentPredmeti : Fragment() {
-    private val upisViewModel = UpisPredmetViewModel()
+    private val upisPredmetViewModel = UpisPredmetViewModel()
 
     private lateinit var spinnerGodina: Spinner
     private lateinit var spinnerGodinaAdapter: ArrayAdapter<String>
@@ -22,7 +26,7 @@ class FragmentPredmeti : Fragment() {
 
     private lateinit var spinnerPredmet: Spinner
     private lateinit var spinnerPredmetAdapter: ArrayAdapter<String>
-    private val listaPredmeta = arrayListOf<String>()
+    private var listaPredmeta = arrayListOf<String>()
 
     private lateinit var spinnerGrupa: Spinner
     private lateinit var spinnerGrupaAdapter: ArrayAdapter<String>
@@ -49,12 +53,6 @@ class FragmentPredmeti : Fragment() {
 
             if (parent != null) { // da ne moram pisati npr parent?.id umjestp parent.id
                 if (parent.id == R.id.odabirGodina) {
-                    /*
-                    if (KorisnikRepository.getGodinaStudija() != 0) {
-                        spinnerGodina.isEnabled = true
-                        spinnerGodina.setSelection(KorisnikRepository.getGodinaStudija())
-                        KorisnikRepository.setGodinaStudija(0)
-                    } else { */
                     odabranaGodina = spinnerGodina.selectedItem.toString()
                     bundle.putString("odabrana_godina", odabranaGodina)
                     if (!odabranaGodina.equals("Odaberite godinu")) {
@@ -66,11 +64,17 @@ class FragmentPredmeti : Fragment() {
                         spinnerGrupa.isEnabled = false
                         spinnerGrupaAdapter.notifyDataSetChanged()
 
-                        listaPredmeta.clear()
-                        listaPredmeta.add("Odaberite predmet")
-                        /*listaPredmeta.addAll(
-                                upisViewModel.getNeupisaniNazivi(odabranaGodina.toInt())
-                        )*/
+                        GlobalScope.launch(Dispatchers.IO) {
+                            var predmeti =
+                                upisPredmetViewModel.getNeupisaniPredmetiNazivi(odabranaGodina.toInt())
+                            withContext(Dispatchers.Main) {
+                                listaPredmeta.clear()
+                                listaPredmeta.add("Odaberite predmet")
+
+                                listaPredmeta.addAll(predmeti)
+                                spinnerPredmetAdapter.notifyDataSetChanged()
+                            }
+                        }
                         spinnerPredmet.setSelection(0)
                         spinnerPredmetAdapter.notifyDataSetChanged()
                     } else if (spinnerPredmet.isEnabled) {
@@ -86,7 +90,6 @@ class FragmentPredmeti : Fragment() {
                         spinnerGrupa.isEnabled = false
                         spinnerGrupaAdapter.notifyDataSetChanged()
                     }
-                    //}
                 } else if (parent.id == R.id.odabirPredmet) {
                     odabraniPredmet = spinnerPredmet.selectedItem.toString()
                     bundle.putString("odabrani_predmet", odabraniPredmet)
@@ -95,8 +98,34 @@ class FragmentPredmeti : Fragment() {
                         !odabraniPredmet.equals("")
                     ) {
                         spinnerGrupa.isEnabled = true
+                        /*
                         listaGrupa.clear()
                         listaGrupa.add("Odaberite grupu")
+
+                         */
+                        GlobalScope.launch(Dispatchers.IO) {
+                            var predmet = upisPredmetViewModel.getPredmetByNaziv(odabraniPredmet)
+
+                            var grupe =
+                                upisPredmetViewModel.getNeupisaneGrupeZaPredmet(predmet!!.id)
+                            var naziviGrupa = arrayListOf<String>()
+
+                            for (grupa in grupe) {
+                                naziviGrupa.add(grupa.naziv)
+                            }
+
+
+                            withContext(Dispatchers.Main) {
+                                listaGrupa.clear()
+                                listaGrupa.add("Odaberite grupu")
+
+                                listaGrupa.addAll(naziviGrupa)
+                                spinnerGrupaAdapter.notifyDataSetChanged()
+                            }
+
+                        }
+
+
                         //listaGrupa.addAll(upisViewModel.getNaziviGroupaZaPredmet(odabraniPredmet))
                         spinnerGrupa.setSelection(0)
                         spinnerGrupaAdapter.notifyDataSetChanged()
@@ -163,7 +192,11 @@ class FragmentPredmeti : Fragment() {
         dodajPredmetDugme.isEnabled = false
 
         dodajPredmetDugme.setOnClickListener {
-            //upisViewModel.upisiPredmet(odabraniPredmet, odabranaGrupa, odabranaGodina)
+            GlobalScope.launch(Dispatchers.IO) {
+                val predmet = upisPredmetViewModel.getPredmetByNaziv(odabraniPredmet)
+                val grupa = upisPredmetViewModel.getGrupaZaPredmet(predmet!!.id, odabranaGrupa)
+                upisPredmetViewModel.upisiUGrupu(grupa.id)
+            }
 
             val bundle = Bundle()
             bundle.putString("odabrana_godina", odabranaGodina)

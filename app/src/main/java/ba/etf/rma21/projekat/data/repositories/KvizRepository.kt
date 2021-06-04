@@ -9,24 +9,23 @@ class KvizRepository {
     companion object {
         private val danasnjiDatum: Date = Calendar.getInstance().time
 
+        suspend fun getKvizoviByGrupa(idGrupe: Int): List<Kviz>? {
+            return withContext(Dispatchers.IO) {
+                val response = ApiAdapter.retrofit.getKvizoviByGrupa(idGrupe)
+                val responseBody = response.body()
+                return@withContext responseBody
+            }
+        }
+
         suspend fun getMyKvizes(): List<Kviz> {
             return withContext(Dispatchers.IO) {
-                val rezultat = arrayListOf<Kviz>()
-                val mojeGrupe = PredmetIGrupaRepository.getUpisaneGrupe()
-                val mojiKvizovi = getAll()
-
-                if (mojiKvizovi == null || mojeGrupe == null)
-                    return@withContext emptyList<Kviz>()
-                else {
-                    for (kviz in mojiKvizovi) {
-                        for (grupa in mojeGrupe) {
-                            if (kviz.id == grupa.id) {
-                                rezultat.add(kviz)
-                            }
-                        }
+                val tempList = ArrayList<Kviz>(0)
+                for (grupa in PredmetIGrupaRepository.getUpisaneGrupe()!!) {
+                    for (kviz in getKvizoviByGrupa(grupa.id)!!) {
+                        tempList.add(kviz)
                     }
-                    return@withContext rezultat
                 }
+                return@withContext tempList
             }
         }
 
@@ -49,7 +48,6 @@ class KvizRepository {
             return withContext(Dispatchers.IO) {
                 val rezultat = arrayListOf<Kviz>()
                 val mojiKvizovi = getMyKvizes()
-
 
                 for (kviz in mojiKvizovi) {
                     if (kviz.datumPocetka.after(danasnjiDatum)) {
@@ -74,6 +72,7 @@ class KvizRepository {
                         rezultat.add(kviz)
                     }
                 }
+
                 return@withContext rezultat
 
             }
@@ -95,6 +94,10 @@ class KvizRepository {
             }
         }
 
-        suspend fun getUpisani(): List<Kviz>? = getMyKvizes()
+        suspend fun getUpisani(): List<Kviz>? {
+            return withContext(Dispatchers.IO) {
+                return@withContext getMyKvizes()
+            }
+        }
     }
 }
