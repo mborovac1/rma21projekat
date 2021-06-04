@@ -74,7 +74,7 @@ interface Api {
     suspend fun zapocniKviz(
         @Path("id") hashStudenta: String,
         @Path("kid") idKviza: Int
-    )
+    ): Response<KvizTaken>
 
     @GET("/kviz/{id}/grupa")
     suspend fun getGrupeZaKviz(

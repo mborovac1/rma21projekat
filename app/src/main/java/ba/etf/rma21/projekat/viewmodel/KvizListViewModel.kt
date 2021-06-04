@@ -32,6 +32,8 @@ class KvizListViewModel {
         }
     }
 
+    suspend fun getMyKvizovi(): List<Kviz> = KvizRepository.getMyKvizes()
+
     fun getFuture(onSuccess: (kvizovi: List<Kviz>) -> Unit, onError: () -> Unit) {
         scope.launch {
             val result = KvizRepository.getFuture()
@@ -67,4 +69,6 @@ class KvizListViewModel {
 
     suspend fun getKvizoviByGrupa(idGrupe: Int): List<Kviz> =
         KvizRepository.getKvizoviByGrupa(idGrupe)!!
+
+    suspend fun getById(id: Int): Kviz? = KvizRepository.getById(id)
 }

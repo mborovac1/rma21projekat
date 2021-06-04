@@ -6,11 +6,14 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.view.FragmentKvizovi
 import ba.etf.rma21.projekat.view.FragmentPoruka
 import ba.etf.rma21.projekat.view.FragmentPredmeti
-//import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
+import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    //private var pitanjeKvizViewModel = PitanjeKvizViewModel()
+    private var pitanjeKvizViewModel = PitanjeKvizViewModel()
 
     private lateinit var bottomNavigation: BottomNavigationView
 
@@ -28,26 +31,31 @@ class MainActivity : AppCompatActivity() {
                     openFragment(fragmentPredmeti)
                     return@OnNavigationItemSelectedListener true
                 }
-                /*
+
                 R.id.predajKviz -> {
-                    val rezultatKviza = pitanjeKvizViewModel
-                            .getRezultatKviza(pitanjeKvizViewModel.getOdabraniKviz().naziv,
-                                    pitanjeKvizViewModel.getOdabraniKviz().nazivPredmeta)
-                    val poruka = "Završili ste kviz " +
-                            pitanjeKvizViewModel.getOdabraniKviz().naziv +
-                            " sa tačnosti " + rezultatKviza
-                    pitanjeKvizViewModel.getOdabraniKviz().zavrsen = true
-                    openFragment(FragmentPoruka.newInstance(poruka))
+                    GlobalScope.launch(Dispatchers.Main) {
+                        val rezultatKviza =
+                            pitanjeKvizViewModel.getRezultatKviza(
+                                pitanjeKvizViewModel.getOdabraniKvizTaken().id
+                            )
+
+                        val poruka = "Završili ste kviz " +
+                                pitanjeKvizViewModel.getOdabraniKviz().naziv +
+                                " sa tačnosti " + rezultatKviza
+                        //pitanjeKvizViewModel.getOdabraniKviz().zavrsen = true
+                        openFragment(FragmentPoruka.newInstance(poruka))
+
+                    }
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.zaustaviKviz -> {
-                    pitanjeKvizViewModel.getOdabraniKviz().prekinut = true
+                    //pitanjeKvizViewModel.getOdabraniKviz().prekinut = true
                     val fragmentKvizovi = FragmentKvizovi.newInstance()
                     openFragment(fragmentKvizovi)
                     bottomNavigation.selectedItemId = R.id.kvizovi
                     return@OnNavigationItemSelectedListener true
                 }
-                */
+
             }
             false
         }

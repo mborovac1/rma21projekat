@@ -9,51 +9,37 @@ import ba.etf.rma21.projekat.data.repositories.PitanjeKvizRepository
 import ba.etf.rma21.projekat.data.repositories.TakeKvizRepository
 
 class PitanjeKvizViewModel {
-    suspend fun getPocetiKvizovi(): List<KvizTaken> = TakeKvizRepository.getPocetiKvizovi()!!
-
-    suspend fun getPitanja(idKviza: Int): List<Pitanje> =
-        PitanjeKvizRepository.getPitanja(idKviza)!!
-
-    suspend fun getOdgovoriKviz(idKviza: Int): List<Odgovor> =
-        OdgovorRepository.getOdgovoriKviz(idKviza)!!
-
-    suspend fun postaviOdgovorKviz(idKvizTaken: Int, idPitanje: Int, odgovor: Int): Int =
-        OdgovorRepository.postaviOdgovorKviz(idKvizTaken, idPitanje, odgovor)!!
-
-    /*
-    fun getPitanja(idKviza: Int): List<Pitanje>? {
-        scope.launch {
-            val rezultat = PitanjeKvizRepository.getPitanja(idKviza)
-
-
-
-        }
-    }
-
-    fun getPitanja(nazivKviza: String, nazivPredmeta: String): List<Pitanje> {
-        return PitanjeKvizRepository.getPitanja(nazivKviza, nazivPredmeta)
-    }
-
-    fun postaviOdgovor(nazivPitanja: String, nazivKviza: String, nazivPredmeta: String,
-                       pozicija: Int) {
-        PitanjeKvizRepository.postaviOdgovor(nazivPitanja, nazivKviza, nazivPredmeta, pozicija)
-    }
-
-    fun getOdgovorZaPitanje(nazivPitanja: String, nazivKviza: String, nazivPredmeta: String): Int {
-        return PitanjeKvizRepository.getOdgovorZaPitanje(nazivPitanja, nazivKviza, nazivPredmeta)
-    }
-
-    fun getRezultatKviza(nazivKviza: String, nazivPredmeta: String): Double {
-        return PitanjeKvizRepository.getRezultatKviza(nazivKviza, nazivPredmeta)
-    }
-    */
-
     fun getOdabraniKviz(): Kviz = PitanjeKvizRepository.odabraniKviz!!
 
     fun setOdabraniKviz(kviz: Kviz) {
         PitanjeKvizRepository.odabraniKviz = kviz
     }
 
+    fun getOdabraniKvizTaken(): KvizTaken = TakeKvizRepository.odabraniKvizTaken!!
+
+    fun setOdabraniKvizTaken(kvizTaken: KvizTaken) {
+        TakeKvizRepository.odabraniKvizTaken = kvizTaken
+    }
+
+    suspend fun getPocetiKvizovi(): List<KvizTaken>? = TakeKvizRepository.getPocetiKvizovi()
+
+    suspend fun getPitanja(idKviza: Int): List<Pitanje> =
+        PitanjeKvizRepository.getPitanja(idKviza)!!
+
+    suspend fun getOdgovoriKviz(idKviza: Int): List<Odgovor>? =
+        OdgovorRepository.getOdgovoriKviz(idKviza)
+
+    suspend fun postaviOdgovorKviz(idKvizTaken: Int, idPitanje: Int, odgovor: Int): Int =
+        OdgovorRepository.postaviOdgovorKviz(idKvizTaken, idPitanje, odgovor)!!
+
     fun validacijaOdgovora(pozicija: Int, pitanje: Pitanje): Boolean = pozicija == pitanje.tacan
 
+    suspend fun zapocniKviz(kid: Int) = TakeKvizRepository.zapocniKviz(kid)
+
+    suspend fun getKvizTakenById(id: Int): KvizTaken? = TakeKvizRepository.getKvizTakenById(id)
+
+    suspend fun getRezultatKviza(idKviza: Int): Int = TakeKvizRepository.getRezultatKviza(idKviza)
+
+    suspend fun getMojOdgovorNaPitanje(idKviza: Int, idPitanja: Int): Int =
+        TakeKvizRepository.getMojOdgovorNaPitanje(idKviza, idPitanja)
 }

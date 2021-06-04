@@ -25,7 +25,6 @@ class OdgovorRepository {
                             ApiAdapter.retrofit
                                 .getOdgovoriKviz(AccountRepository.acHash, kvizTaken.id).body()!!
                         )
-
                     }
                 }
 
@@ -40,7 +39,7 @@ class OdgovorRepository {
 
                 var mojKvizTaken = KvizTaken(0, "", 0, Date(), 0)
 
-                for (kvizTaken in pocetiKvizovi) {
+                for (kvizTaken in pocetiKvizovi!!) {
                     if (kvizTaken.id == idKvizTaken) {
                         mojKvizTaken = kvizTaken // iz ovog sad dobijemo kviz
                         break

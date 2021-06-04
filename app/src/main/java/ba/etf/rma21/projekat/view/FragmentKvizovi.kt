@@ -16,8 +16,9 @@ import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.models.Kviz
 import ba.etf.rma21.projekat.viewmodel.KvizListViewModel
 import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
-
-//import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class FragmentKvizovi : Fragment() {
     private val kvizListViewModel = KvizListViewModel()
@@ -46,7 +47,7 @@ class FragmentKvizovi : Fragment() {
         kvizovi.layoutManager = GridLayoutManager(activity, 2) // 2 kolone
         kvizAdapter = KvizListAdapter(listOf()) { kviz ->
             pitanjeKvizViewModel.setOdabraniKviz(kviz)
-            //showKvizDetails(kviz)
+            showKvizDetails(kviz)
         }
         kvizovi.adapter = kvizAdapter
 
@@ -90,21 +91,27 @@ class FragmentKvizovi : Fragment() {
         transaction.commit()
     }
 
-/*
     private fun showKvizDetails(kviz: Kviz) {
-        //f (kvizListViewModel.getMojiKvizovi().contains(kviz)) {
-            val fragmentPokusaj = FragmentPokusaj.newInstance(pitanjeKvizViewModel
-                    .getPitanja(kviz.naziv, kviz.nazivPredmeta))
+        GlobalScope.launch(Dispatchers.Main) {
+            if (kvizListViewModel.getMyKvizovi().contains(kviz)) {
+                val fragmentPokusaj = FragmentPokusaj.newInstance(
+                    pitanjeKvizViewModel.getPitanja(kviz.id)
+                )
 
-            val bundle = Bundle()
-            bundle.putString("naziv_kviza", kviz.naziv)
-            bundle.putString("predmet_kviza", kviz.nazivPredmeta)
-            fragmentPokusaj.arguments = bundle
+                val kvizTaken = pitanjeKvizViewModel.zapocniKviz(kviz.id)
+                pitanjeKvizViewModel.setOdabraniKvizTaken(kvizTaken!!)
 
-            openFragment(fragmentPokusaj)
-        //}
+                val bundle = Bundle()
+                bundle.putInt("id_kviza", kviz.id)
+                bundle.putInt("id_kt", kvizTaken!!.id)
+                //bundle.putString("naziv_kviza", kviz.naziv)
+                bundle.putString("predmet_kviza", kviz.nazivPredmeta)
+                fragmentPokusaj.arguments = bundle
+
+                openFragment(fragmentPokusaj)
+            }
+        }
     }
- */
 
     fun onSuccess(kvizovi: List<Kviz>) {
         kvizAdapter.updateKvizovi(kvizovi)

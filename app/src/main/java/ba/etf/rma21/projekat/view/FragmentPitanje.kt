@@ -17,8 +17,11 @@ import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.models.Pitanje
 import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-/*
 class FragmentPitanje(pitanje: Pitanje) : Fragment() {
     private val pitanje = pitanje
 
@@ -29,24 +32,27 @@ class FragmentPitanje(pitanje: Pitanje) : Fragment() {
     private lateinit var listaAdapter: ArrayAdapter<String>
     private var listaVrijednosti: ArrayList<String> = arrayListOf()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val activity = activity as MainActivity
         activity.popraviNavigacijskeOpcije(R.id.predajKviz)
 
-        // za bojenje navigation viewa (navigacijaPitanja) u zavisnosti od tačnosti odgovora
         val bundle = this.arguments as Bundle
         val navigacijaPitanjaIndex: Int = bundle.getInt("navigacijaPitanja_id")
-        val nazivKviza: String = bundle.getString("naziv_kviza")!!
-        val nazivPredmeta: String = bundle.getString("predmet_kviza")!!
+        val idKviza: Int = bundle.getInt("id_kviza")
+        val idKvizTaken = bundle.getInt("id_kt")
 
         var view = inflater.inflate(R.layout.pitanje_fragment, container, false)
 
         tekstPitanja = view.findViewById(R.id.tekstPitanja)
         odgovoriLista = view.findViewById(R.id.odgovoriLista)
         listaVrijednosti.addAll(pitanje.opcije)
-        listaAdapter = ArrayAdapter(view.context, android.R.layout.simple_list_item_1,
-                listaVrijednosti)
+        listaAdapter = ArrayAdapter(
+            view.context, android.R.layout.simple_list_item_1,
+            listaVrijednosti
+        )
         odgovoriLista.adapter = listaAdapter
 
         tekstPitanja.text = pitanje.tekstPitanja
@@ -56,74 +62,48 @@ class FragmentPitanje(pitanje: Pitanje) : Fragment() {
 
         val spanString = SpannableString(menuItem.title.toString())
 
-        if (pitanjeKvizViewModel.getOdgovorZaPitanje(pitanje.naziv, nazivKviza, nazivPredmeta) != -1
-                && !pitanjeKvizViewModel.getOdabraniKviz().zavrsen) {
-            odgovoriLista.isEnabled = false
-            val odgovor = pitanjeKvizViewModel.getOdgovorZaPitanje(pitanje.naziv, nazivKviza,
-                    nazivPredmeta)
-            val tacanOdgovorBoja: Int = Color.parseColor("#3DDC84")
-            val netacanOdgovorBoja: Int = Color.parseColor("#DB4F3D")
-            odgovoriLista.post {
-                if (odgovor == pitanje.tacan) {
-                    odgovoriLista[odgovor].setBackgroundColor(tacanOdgovorBoja)
-                } else {
-                    odgovoriLista[odgovor].setBackgroundColor(netacanOdgovorBoja)
-                    odgovoriLista[pitanje.tacan].setBackgroundColor(tacanOdgovorBoja)
-                }
-            }
-        } else if (pitanjeKvizViewModel.getOdabraniKviz().zavrsen) {
-            val tacanOdgovorBoja: Int = Color.parseColor("#3DDC84")
-            val netacanOdgovorBoja: Int = Color.parseColor("#DB4F3D")
-            activity.popraviNavigacijskeOpcije(R.id.kvizovi)
-            odgovoriLista.isEnabled = false
-            val odgovor = pitanjeKvizViewModel.getOdgovorZaPitanje(pitanje.naziv, nazivKviza,
-                    nazivPredmeta)
-            if (odgovor != -1) {
-                odgovoriLista.post {
-                    if (odgovor == pitanje.tacan) {
-                        odgovoriLista[odgovor].setBackgroundColor(tacanOdgovorBoja)
-                    } else {
-                        odgovoriLista[odgovor].setBackgroundColor(netacanOdgovorBoja)
-                        odgovoriLista[pitanje.tacan].setBackgroundColor(tacanOdgovorBoja)
-                    }
-                }
-            }
-        } else {
-            odgovoriLista.setOnItemClickListener { parent, view1, position, id ->
+        odgovoriLista.setOnItemClickListener { parent, view1, position, id ->
+            GlobalScope.launch(Dispatchers.IO) {
                 val element = parent.getChildAt(position)
                 val boja = element as TextView
                 boja.setTextColor(Color.parseColor("#FF000000")) // boja teksta - crna
 
-                pitanjeKvizViewModel.postaviOdgovor(pitanje.naziv, nazivKviza, nazivPredmeta,
-                        position)
+                val kvizTaken = pitanjeKvizViewModel.getKvizTakenById(idKvizTaken)
 
-                val tacanOdgovor: Boolean = pitanjeKvizViewModel.validacijaOdgovora(position,
-                        pitanje)
+                pitanjeKvizViewModel.postaviOdgovorKviz(kvizTaken!!.id, pitanje.id, position)
+
+                val tacanOdgovor: Boolean = pitanjeKvizViewModel.validacijaOdgovora(
+                    position,
+                    pitanje
+                )
                 val tacanOdgovorBoja: Int = Color.parseColor("#3DDC84")
                 val netacanOdgovorBoja: Int = Color.parseColor("#DB4F3D")
 
                 if (tacanOdgovor) {
-                    element.setBackgroundColor(tacanOdgovorBoja)
-                    // bojenje navigation viewa
-                    spanString.setSpan(ForegroundColorSpan(tacanOdgovorBoja),
-                            0, spanString.length, 0)
-                    menuItem.title = spanString
+                    withContext(Dispatchers.Main) {
+                        element.setBackgroundColor(tacanOdgovorBoja)
+                        // bojenje navigation viewa
+                        spanString.setSpan(
+                            ForegroundColorSpan(tacanOdgovorBoja),
+                            0, spanString.length, 0
+                        )
+                        menuItem.title = spanString
+                    }
                 } else {
-                    element.setBackgroundColor(netacanOdgovorBoja)
-                    // postavljanje tačnog odgovora na zeleno ako je izabran netačan odgovor
-                    parent.getChildAt(pitanje.tacan).setBackgroundColor(tacanOdgovorBoja)
-                    // bojenje navigation viewa
-                    spanString.setSpan(ForegroundColorSpan(netacanOdgovorBoja),
-                            0, spanString.length, 0)
-                    menuItem.title = spanString
+                    withContext(Dispatchers.Main) {
+                        element.setBackgroundColor(netacanOdgovorBoja)
+                        // postavljanje tačnog odgovora na zeleno ako je izabran netačan odgovor
+                        parent.getChildAt(pitanje.tacan).setBackgroundColor(tacanOdgovorBoja)
+                        // bojenje navigation viewa
+                        spanString.setSpan(
+                            ForegroundColorSpan(netacanOdgovorBoja),
+                            0, spanString.length, 0
+                        )
+                        menuItem.title = spanString
+                    }
                 }
-
-                odgovoriLista.isEnabled = false
-                element.isEnabled = false
             }
         }
-
         return view
     }
 }
-*/
