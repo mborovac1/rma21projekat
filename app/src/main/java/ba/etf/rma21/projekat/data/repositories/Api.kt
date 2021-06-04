@@ -2,6 +2,7 @@ package ba.etf.rma21.projekat.data.repositories
 
 import ba.etf.rma21.projekat.data.models.*
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -89,4 +90,11 @@ interface Api {
     suspend fun getKvizoviByGrupa(
         @Path("id") idGrupe: Int
     ): Response<List<Kviz>>
+
+    @POST("/student/{id}/kviztaken/{ktid}/odgovor")
+    suspend fun postaviOdgovorKviz(
+        @Path("id") hashStudenta: String,
+        @Path("ktid") idKvizTaken: Int,
+        @Body odgovorResponse: GetOdgovorResponse
+    ): Response<Odgovor> // ili Call umjesto Response
 }

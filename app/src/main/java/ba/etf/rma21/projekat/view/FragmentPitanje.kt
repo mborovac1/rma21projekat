@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.models.Pitanje
-//import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
+import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import com.google.android.material.navigation.NavigationView
 
 /*
@@ -49,7 +49,7 @@ class FragmentPitanje(pitanje: Pitanje) : Fragment() {
                 listaVrijednosti)
         odgovoriLista.adapter = listaAdapter
 
-        tekstPitanja.text = pitanje.tekst
+        tekstPitanja.text = pitanje.tekstPitanja
 
         val navigacijaPitanja: NavigationView = activity.findViewById(R.id.navigacijaPitanja)
         val menuItem = navigacijaPitanja.menu[navigacijaPitanjaIndex]

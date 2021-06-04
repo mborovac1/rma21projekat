@@ -12,7 +12,7 @@ data class Kviz(
     val datumRada: Date? = null,
     @SerializedName("trajanje") val trajanje: Int,
     val nazivGrupe: String? = null,
-    val osvojeniBodovi: Float? = null
+    val osvojeniBodovi: Int? = null
 ) {
     var zavrsen: Boolean = false
     var prekinut: Boolean = false

@@ -15,11 +15,13 @@ import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
 import ba.etf.rma21.projekat.data.models.Kviz
 import ba.etf.rma21.projekat.viewmodel.KvizListViewModel
+import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 
 //import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 
 class FragmentKvizovi : Fragment() {
     private val kvizListViewModel = KvizListViewModel()
+    private val pitanjeKvizViewModel = PitanjeKvizViewModel()
 
     private lateinit var kvizovi: RecyclerView
     private lateinit var kvizAdapter: KvizListAdapter
@@ -43,7 +45,7 @@ class FragmentKvizovi : Fragment() {
         kvizovi = view.findViewById(R.id.listaKvizova)
         kvizovi.layoutManager = GridLayoutManager(activity, 2) // 2 kolone
         kvizAdapter = KvizListAdapter(listOf()) { kviz ->
-            //pitanjeKvizViewModel.setOdabraniKviz(kviz)
+            pitanjeKvizViewModel.setOdabraniKviz(kviz)
             //showKvizDetails(kviz)
         }
         kvizovi.adapter = kvizAdapter
@@ -88,9 +90,9 @@ class FragmentKvizovi : Fragment() {
         transaction.commit()
     }
 
-    /*
+/*
     private fun showKvizDetails(kviz: Kviz) {
-        if (kvizListViewModel.getMojiKvizovi().contains(kviz)) {
+        //f (kvizListViewModel.getMojiKvizovi().contains(kviz)) {
             val fragmentPokusaj = FragmentPokusaj.newInstance(pitanjeKvizViewModel
                     .getPitanja(kviz.naziv, kviz.nazivPredmeta))
 
@@ -100,8 +102,9 @@ class FragmentKvizovi : Fragment() {
             fragmentPokusaj.arguments = bundle
 
             openFragment(fragmentPokusaj)
-        }
-    } */
+        //}
+    }
+ */
 
     fun onSuccess(kvizovi: List<Kviz>) {
         kvizAdapter.updateKvizovi(kvizovi)
