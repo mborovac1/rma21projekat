@@ -71,7 +71,19 @@ class KvizListAdapter(
         val danasnjiDatum: Date = Calendar.getInstance().time
 
         // uslov za crvenu, zelenu i žutu boju se zasniva na datumKraj, a datumKraj je na API-ju null
-        if (kvizovi[position].osvojeniBodovi != null) {
+        if (kvizovi[position].datumKraj == null &&
+            kvizovi[position].datumPocetka.before(danasnjiDatum)
+        ) {
+            bojaMatch = "zelena"
+            val datum = kvizovi[position].datumPocetka
+            holder.datumKviza.text = formatter.format(datum)
+        } else if (kvizovi[position].datumKraj == null &&
+            kvizovi[position].datumPocetka.after(danasnjiDatum)
+        ) {
+            bojaMatch = "zuta"
+            val datum = kvizovi[position].datumPocetka
+            holder.datumKviza.text = formatter.format(datum)
+        } else if (kvizovi[position].osvojeniBodovi != null) {
             bojaMatch = "plava"
             val datum = kvizovi[position].datumRada
             holder.datumKviza.text = formatter.format(datum)

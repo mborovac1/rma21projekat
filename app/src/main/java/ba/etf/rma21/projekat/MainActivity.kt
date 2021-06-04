@@ -25,13 +25,11 @@ class MainActivity : AppCompatActivity() {
                     openFragment(fragmentKvizovi)
                     return@OnNavigationItemSelectedListener true
                 }
-
                 R.id.predmeti -> {
                     val fragmentPredmeti = FragmentPredmeti.newInstance()
                     openFragment(fragmentPredmeti)
                     return@OnNavigationItemSelectedListener true
                 }
-
                 R.id.predajKviz -> {
                     GlobalScope.launch(Dispatchers.Main) {
                         val rezultatKviza =
@@ -55,7 +53,6 @@ class MainActivity : AppCompatActivity() {
                     bottomNavigation.selectedItemId = R.id.kvizovi
                     return@OnNavigationItemSelectedListener true
                 }
-
             }
             false
         }
