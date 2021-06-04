@@ -14,10 +14,13 @@ class OdgovorRepository {
     companion object {
         private val pitanjeKvizViewModel = PitanjeKvizViewModel()
 
-        suspend fun getOdgovoriKviz(idKviza: Int): List<Odgovor>? {
+        suspend fun getOdgovoriKviz(idKviza: Int): List<Odgovor> {
             return withContext(Dispatchers.IO) {
                 val pocetiKvizovi = TakeKvizRepository.getPocetiKvizovi()
                 val odgovori = arrayListOf<Odgovor>()
+
+                if (pocetiKvizovi.isNullOrEmpty())
+                    return@withContext emptyList<Odgovor>()
 
                 for (kvizTaken in pocetiKvizovi!!) {
                     if (kvizTaken.KvizId == idKviza) {

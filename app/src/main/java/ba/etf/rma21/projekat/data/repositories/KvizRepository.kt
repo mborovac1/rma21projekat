@@ -89,7 +89,8 @@ class KvizRepository {
         suspend fun getById(id: Int): Kviz? {
             return withContext(Dispatchers.IO) {
                 val response = ApiAdapter.retrofit.getKvizById(id)
-                val responseBody = response.body()
+                val responseBody = response.body() ?: return@withContext null
+
                 return@withContext responseBody
             }
         }

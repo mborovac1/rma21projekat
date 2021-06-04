@@ -66,7 +66,6 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.selectedItemId = R.id.kvizovi
         val fragmentKvizovi = FragmentKvizovi.newInstance()
         openFragment(fragmentKvizovi)
-
     }
 
     private fun openFragment(fragment: Fragment) {

@@ -11,7 +11,8 @@ class TakeKvizRepository {
         suspend fun zapocniKviz(kid: Int): KvizTaken? {
             return withContext(Dispatchers.IO) {
                 val response = ApiAdapter.retrofit.zapocniKviz(AccountRepository.acHash, kid)
-                val responseBody = response.body()
+                val responseBody = response.body() ?: return@withContext null
+
                 return@withContext responseBody
             }
         }

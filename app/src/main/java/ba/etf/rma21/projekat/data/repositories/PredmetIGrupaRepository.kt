@@ -56,10 +56,7 @@ class PredmetIGrupaRepository {
         suspend fun getUpisaneGrupe(): List<Grupa>? {
             return withContext(Dispatchers.IO) {
                 val response = ApiAdapter.retrofit.getUpisaneGrupe(AccountRepository.acHash)
-                val responseBody = response.body()
-
-                if (responseBody == null)
-                    return@withContext emptyList()
+                val responseBody = response.body() ?: return@withContext emptyList()
 
                 return@withContext responseBody
             }
