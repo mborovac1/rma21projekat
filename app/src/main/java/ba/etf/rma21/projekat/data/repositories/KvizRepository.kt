@@ -102,3 +102,59 @@ class KvizRepository {
         }
     }
 }
+
+// spirala 4
+/*
+package ba.etf.rma21.projekat.data.repositories
+
+import android.content.Context
+import ba.etf.rma21.projekat.data.models.Kviz
+
+
+class KvizRepository {
+
+    companion object {
+
+        init {
+
+        }
+        private lateinit var context:Context
+        fun setContext(_context: Context){
+            context=_context
+        }
+        fun getMyKvizes(): List<Kviz> {
+            return emptyList()
+        }
+
+        fun getAl1l(): List<Kviz> {
+            return emptyList()
+        }
+
+        fun getDone(): List<Kviz> {
+            return emptyList()
+        }
+
+        fun getFuture(): List<Kviz> {
+            return emptyList()
+        }
+
+        fun getNotTaken(): List<Kviz> {
+            return emptyList()
+        }
+
+        suspend fun getAll(): List<Kviz>? {
+            return emptyList()
+        }
+
+        suspend fun getById(id: Int): Kviz? {
+            return null
+        }
+
+        suspend fun getUpisani(): List<Kviz>? {
+            return emptyList()
+        }
+
+
+    }
+}
+*/

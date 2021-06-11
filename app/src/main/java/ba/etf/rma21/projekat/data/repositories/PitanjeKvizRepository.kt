@@ -71,3 +71,25 @@ class PitanjeKvizRepository {
 
     }
 }
+
+// spirala 4
+/*
+package ba.etf.rma21.projekat.data.repositories
+
+import android.content.Context
+import ba.etf.rma21.projekat.data.models.Pitanje
+
+
+class PitanjeKvizRepository {
+    companion object {
+        private lateinit var context:Context
+        fun setContext(_context: Context){
+            context=_context
+        }
+        suspend fun getPitanja(idKviza: Int): List<Pitanje>? {
+            return emptyList()
+        }
+    }
+
+}
+ */

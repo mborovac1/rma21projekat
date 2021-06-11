@@ -73,3 +73,29 @@ class TakeKvizRepository {
 
     }
 }
+
+// spirala 4
+/*
+package ba.etf.rma21.projekat.data.repositories
+
+import android.content.Context
+import ba.etf.rma21.projekat.data.models.KvizTaken
+
+class TakeKvizRepository {
+    companion object {
+        private lateinit var context:Context
+        fun setContext(_context: Context){
+            context=_context
+        }
+        suspend fun zapocniKviz(idKviza: Int): KvizTaken? {
+            return null
+        }
+
+
+        suspend fun getPocetiKvizovi(): List<KvizTaken>? {
+            return emptyList()
+        }
+    }
+
+}
+ */

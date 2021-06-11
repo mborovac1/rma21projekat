@@ -207,3 +207,42 @@ class PredmetIGrupaRepository {
         }
     }
 }
+
+// spirala 4
+/*
+package ba.etf.rma21.projekat.data.repositories
+
+import android.content.Context
+import ba.etf.rma21.projekat.data.models.Grupa
+import ba.etf.rma21.projekat.data.models.Predmet
+
+
+class PredmetIGrupaRepository {
+        companion object{
+            private lateinit var context:Context
+            fun setContext(_context: Context){
+                context=_context
+            }
+            suspend fun getPredmeti():List<Predmet>? {
+                    return emptyList()
+            }
+            suspend fun getGrupe():List<Grupa>?{
+                    return emptyList()
+            }
+
+            suspend fun getGrupeZaPredmet(idPredmeta:Int):List<Grupa>?{
+                    return emptyList()
+            }
+
+            suspend fun upisiUGrupu(idGrupa:Int):Boolean?{
+                    return false
+            }
+
+            suspend fun getUpisaneGrupe():List<Grupa>?{
+                    return emptyList()
+            }
+
+
+        }
+}
+ */
