@@ -1,18 +1,22 @@
 package ba.etf.rma21.projekat.data.repositories
 
-import ba.etf.rma21.projekat.data.models.GetOdgovorResponse
-import ba.etf.rma21.projekat.data.models.KvizTaken
+import android.content.Context
+import ba.etf.rma21.projekat.data.AppDatabase
 import ba.etf.rma21.projekat.data.models.Odgovor
-import ba.etf.rma21.projekat.data.models.Pitanje
 import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
-import kotlin.math.roundToInt
 
 class OdgovorRepository {
     companion object {
         private val pitanjeKvizViewModel = PitanjeKvizViewModel()
+        private lateinit var context: Context
+
+        fun setContext(_context: Context) {
+            context = _context
+        }
+
 
         suspend fun getOdgovoriKviz(idKviza: Int): List<Odgovor> {
             return withContext(Dispatchers.IO) {
@@ -35,6 +39,32 @@ class OdgovorRepository {
             }
         }
 
+        suspend fun postaviOdgovorKviz(idKvizTaken: Int, idPitanje: Int, odgovor: Int): Int? {
+            return withContext(Dispatchers.IO) {
+                val db = AppDatabase.getInstance(context)
+
+                val mojiOdgovori = db.odgovorDao().getMojiOdgovoriZaKvizTaken(idKvizTaken)
+
+                var nadjen: Boolean = false
+                for (odg in mojiOdgovori) {
+                    if (odg.idKvizTakena == idKvizTaken && odg.idPitanja == idPitanje) {
+                        nadjen = true
+                        break
+                    }
+                }
+
+                if (!nadjen) {
+                    val id = Odgovor.ID
+                    var odgovor = Odgovor(id, odgovor, idKvizTaken, idPitanje)
+                    db.odgovorDao().dodajOdgovor(odgovor)
+                    Odgovor.ID = Odgovor.ID + 1
+                }
+
+                return@withContext 50 // izračunati fino postotak
+            }
+        }
+
+        /*
         suspend fun postaviOdgovorKviz(idKvizTaken: Int, idPitanje: Int, odgovor: Int): Int? {
             return withContext(Dispatchers.IO) {
                 var brojTacnihOdgovora = 0
@@ -60,7 +90,7 @@ class OdgovorRepository {
                 }
 
                 for (odgovorZaKviz in getOdgovoriKviz(mojKvizTaken.KvizId)!!) {
-                    if (odgovorZaKviz.odgovoreno == svaPitanjaZaKviz.find { pitanje -> pitanje.id == odgovorZaKviz.PitanjeId }?.tacan) {
+                    if (odgovorZaKviz.odgovoreno == svaPitanjaZaKviz.find { pitanje -> pitanje.id == odgovorZaKviz.idPitanja }?.tacan) {
                         brojTacnihOdgovora++
                     }
                 }
@@ -83,32 +113,6 @@ class OdgovorRepository {
 
             }
         }
+         */
     }
 }
-
-// spirala 4
-/*
-package ba.etf.rma21.projekat.data.repositories
-
-import android.content.Context
-import ba.etf.rma21.projekat.data.models.Odgovor
-
-
-class OdgovorRepository {
-    companion object {
-        private lateinit var context: Context
-        fun setContext(_context:Context){
-            context=_context
-        }
-        suspend fun getOdgovoriKviz(idKviza: Int): List<Odgovor>? {
-            return emptyList()
-        }
-
-        suspend fun postaviOdgovorKviz(idKvizTaken: Int, idPitanje: Int, odgovor: Int): Int? {
-            return null
-        }
-    }
-
-
-}
- */

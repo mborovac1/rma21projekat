@@ -2,10 +2,7 @@ package ba.etf.rma21.projekat.data.repositories
 
 import ba.etf.rma21.projekat.data.models.*
 import retrofit2.Response
-import retrofit2.http.Body
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface Api {
     @GET("/kviz")
@@ -97,4 +94,10 @@ interface Api {
         @Path("ktid") idKvizTaken: Int,
         @Body odgovorResponse: GetOdgovorResponse
     ): Response<Odgovor> // ili Call umjesto Response
+
+    @GET("/account/{id}/lastUpdate?date=yyyy-mm-ddThh:mm:ss")
+    suspend fun imaLiPromjena(
+        @Path("id") hashStudenta: String,
+        @Query("date") datum: String?
+    ): Response<PromjenaResponse>
 }

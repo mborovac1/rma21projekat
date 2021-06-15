@@ -1,5 +1,6 @@
 package ba.etf.rma21.projekat.data.repositories
 
+import android.content.Context
 import ba.etf.rma21.projekat.data.models.Grupa
 import ba.etf.rma21.projekat.data.models.Predmet
 import ba.etf.rma21.projekat.viewmodel.KvizListViewModel
@@ -8,6 +9,12 @@ import kotlinx.coroutines.withContext
 
 class PredmetIGrupaRepository {
     companion object {
+        private lateinit var context: Context
+
+        fun setContext(_context: Context) {
+            context = _context
+        }
+
         suspend fun getPredmeti(): List<Predmet>? {
             return withContext(Dispatchers.IO) {
                 val response = ApiAdapter.retrofit.getPredmeti()
@@ -183,7 +190,7 @@ class PredmetIGrupaRepository {
 
                 for (predmet in predmetiByGodina) {
                     if (!upisaniPredmeti.contains(predmet)) {
-                        rezultat.add(predmet.naziv)
+                        rezultat.add(predmet.naziv!!)
                     }
                 }
 
@@ -207,42 +214,3 @@ class PredmetIGrupaRepository {
         }
     }
 }
-
-// spirala 4
-/*
-package ba.etf.rma21.projekat.data.repositories
-
-import android.content.Context
-import ba.etf.rma21.projekat.data.models.Grupa
-import ba.etf.rma21.projekat.data.models.Predmet
-
-
-class PredmetIGrupaRepository {
-        companion object{
-            private lateinit var context:Context
-            fun setContext(_context: Context){
-                context=_context
-            }
-            suspend fun getPredmeti():List<Predmet>? {
-                    return emptyList()
-            }
-            suspend fun getGrupe():List<Grupa>?{
-                    return emptyList()
-            }
-
-            suspend fun getGrupeZaPredmet(idPredmeta:Int):List<Grupa>?{
-                    return emptyList()
-            }
-
-            suspend fun upisiUGrupu(idGrupa:Int):Boolean?{
-                    return false
-            }
-
-            suspend fun getUpisaneGrupe():List<Grupa>?{
-                    return emptyList()
-            }
-
-
-        }
-}
- */
