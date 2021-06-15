@@ -1,11 +1,17 @@
 package ba.etf.rma21.projekat.data.repositories
 
+import android.content.Context
 import ba.etf.rma21.projekat.data.models.KvizTaken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class TakeKvizRepository {
     companion object {
+        private lateinit var context: Context
+        fun setContext(_context: Context){
+            context=_context
+        }
+
         var odabraniKvizTaken: KvizTaken? = null
 
         suspend fun zapocniKviz(kid: Int): KvizTaken? {

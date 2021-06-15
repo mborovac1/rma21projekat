@@ -11,6 +11,7 @@ import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import ba.etf.rma21.projekat.MainActivity
 import ba.etf.rma21.projekat.R
+import ba.etf.rma21.projekat.viewmodel.AccountViewModel
 import ba.etf.rma21.projekat.viewmodel.UpisPredmetViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -19,6 +20,7 @@ import kotlinx.coroutines.withContext
 
 class FragmentPredmeti : Fragment() {
     private val upisPredmetViewModel = UpisPredmetViewModel()
+    private var accountViewModel = AccountViewModel()
 
     private lateinit var spinnerGodina: Spinner
     private lateinit var spinnerGodinaAdapter: ArrayAdapter<String>
@@ -195,7 +197,11 @@ class FragmentPredmeti : Fragment() {
             GlobalScope.launch(Dispatchers.IO) {
                 val predmet = upisPredmetViewModel.getPredmetByNaziv(odabraniPredmet)
                 val grupa = upisPredmetViewModel.getGrupaZaPredmet(predmet!!.id, odabranaGrupa)
-                upisPredmetViewModel.upisiUGrupu(grupa.id)
+
+                //upisPredmetViewModel.upisiUGrupu(grupa.id) // spirala 3
+
+                upisPredmetViewModel.upisiUGrupuBaza(grupa)
+                accountViewModel.postaviHash("31b01a25-4476-47b0-9418-c34fc2be4bba")
             }
 
             val bundle = Bundle()

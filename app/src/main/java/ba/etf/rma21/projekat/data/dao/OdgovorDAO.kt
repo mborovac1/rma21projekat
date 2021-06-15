@@ -11,7 +11,7 @@ interface OdgovorDAO {
     suspend fun obrisiSve()
 
     @Insert
-    suspend fun dodajOdgovor(vararg odgovor: Odgovor)
+    suspend fun dodajOdgovor(odgovor: Odgovor)
 
     @Query("SELECT MAX(id)+1 FROM Odgovor")
     suspend fun getSljedeciId(): Long

@@ -1,5 +1,6 @@
 package ba.etf.rma21.projekat.data.repositories
 
+import android.content.Context
 import ba.etf.rma21.projekat.data.models.Kviz
 import ba.etf.rma21.projekat.data.models.Pitanje
 import kotlinx.coroutines.Dispatchers
@@ -7,6 +8,11 @@ import kotlinx.coroutines.withContext
 
 class PitanjeKvizRepository {
     companion object {
+        private lateinit var context: Context
+        fun setContext(_context: Context){
+            context=_context
+        }
+
         var odabraniKviz: Kviz? = null
 
         suspend fun getPitanja(idKviza: Int): List<Pitanje>? {

@@ -13,6 +13,8 @@ class UpisPredmetViewModel {
 
     suspend fun upisiUGrupu(idGrupa: Int): Boolean? = PredmetIGrupaRepository.upisiUGrupu(idGrupa)
 
+    suspend fun upisiUGrupuBaza(grupa: Grupa) = PredmetIGrupaRepository.upisiUGrupuBaza(grupa)
+
     suspend fun getGrupaZaPredmet(idPredmeta: Int, nazivGrupe: String): Grupa =
         PredmetIGrupaRepository.getGrupaZaPredmet(idPredmeta, nazivGrupe)!!
 

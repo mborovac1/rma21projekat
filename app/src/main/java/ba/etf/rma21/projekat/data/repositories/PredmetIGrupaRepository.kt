@@ -1,6 +1,7 @@
 package ba.etf.rma21.projekat.data.repositories
 
 import android.content.Context
+import ba.etf.rma21.projekat.data.AppDatabase
 import ba.etf.rma21.projekat.data.models.Grupa
 import ba.etf.rma21.projekat.data.models.Predmet
 import ba.etf.rma21.projekat.viewmodel.KvizListViewModel
@@ -57,6 +58,23 @@ class PredmetIGrupaRepository {
                 }
 
                 return@withContext false
+            }
+        }
+
+        suspend fun upisiUGrupuBaza(grupa: Grupa) {
+            withContext(Dispatchers.IO) {
+                upisiUGrupu(grupa.id)
+
+                AppDatabase.getInstance(context).grupaDao().dodajGrupu(grupa)
+                val predmet = getPredmetById(grupa.idPredmeta)!!
+                AppDatabase.getInstance(context).predmetDao().dodajPredmet(predmet)
+                val kvizovi = KvizRepository.getKvizoviByGrupa(grupa.id)
+
+                if (kvizovi != null) {
+                    for (kviz in kvizovi) {
+                        AppDatabase.getInstance(context).kvizDao().dodajKviz(kviz)
+                    }
+                }
             }
         }
 
@@ -178,7 +196,7 @@ class PredmetIGrupaRepository {
                     }
                 }
 
-                return@withContext rezultat
+                return@withContext rezultat.distinctBy { it.id }
             }
         }
 

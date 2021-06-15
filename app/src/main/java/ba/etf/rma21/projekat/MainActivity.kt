@@ -3,7 +3,10 @@ package ba.etf.rma21.projekat
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import ba.etf.rma21.projekat.data.AppDatabase
+import ba.etf.rma21.projekat.data.models.Account
 import ba.etf.rma21.projekat.data.repositories.AccountRepository
+import ba.etf.rma21.projekat.data.repositories.DBRepository
 import ba.etf.rma21.projekat.view.FragmentKvizovi
 import ba.etf.rma21.projekat.view.FragmentPoruka
 import ba.etf.rma21.projekat.view.FragmentPredmeti
@@ -13,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private var pitanjeKvizViewModel = PitanjeKvizViewModel()
@@ -64,17 +68,32 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+        GlobalScope.launch(Dispatchers.Main) {
+            accountViewModel.postaviContext(applicationContext)
+            AppDatabase.getInstance(applicationContext).accountDao().obrisiSve()
+            AppDatabase.getInstance(applicationContext).accountDao()
+                .dodajAccount(Account(AccountRepository.acHash, Date().toString()))
+            DBRepository.updateNow()
+        }
+
         val payload = intent?.getStringExtra("payload")
         AccountRepository.setContext(applicationContext)
         if (payload != null) {
             GlobalScope.launch(Dispatchers.Main) {
                 accountViewModel.postaviHash(payload)
+                accountViewModel.postaviContext(applicationContext)
             }
-        } else {
+        } /* else {
             GlobalScope.launch(Dispatchers.Main) {
                 accountViewModel.postaviHash("31b01a25-4476-47b0-9418-c34fc2be4bba")
+                accountViewModel.postaviContext(applicationContext)
+                AppDatabase.getInstance(applicationContext).accountDao().obrisiSve()
+                AppDatabase.getInstance(applicationContext).accountDao()
+                    .dodajAccount(Account("31b01a25-4476-47b0-9418-c34fc2be4bba", Date().toString()))
+                DBRepository.updateNow()
             }
-        }
+        } */
 
         bottomNavigation = findViewById(R.id.bottomNav)
         bottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)

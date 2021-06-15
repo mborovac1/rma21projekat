@@ -1,5 +1,6 @@
 package ba.etf.rma21.projekat.data.repositories
 
+import android.content.Context
 import ba.etf.rma21.projekat.data.models.Kviz
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -7,6 +8,12 @@ import java.util.*
 
 class KvizRepository {
     companion object {
+        private lateinit var context: Context
+
+        fun setContext(_context: Context){
+            context=_context
+        }
+
         private val danasnjiDatum: Date = Calendar.getInstance().time
 
         suspend fun getKvizoviByGrupa(idGrupe: Int): List<Kviz>? {

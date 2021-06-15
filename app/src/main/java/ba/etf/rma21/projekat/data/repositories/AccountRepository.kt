@@ -16,7 +16,33 @@ class AccountRepository {
             context = _context
         }
 
-        suspend fun postaviHash(acHash: String): Boolean {
+        suspend fun postaviHash(acHash:String):Boolean {
+            val db = AppDatabase.getInstance(context)
+            val brojAccountova = db.accountDao().getBrojAccountova()
+            if (acHash.equals(this.acHash)) return true
+            this.acHash = acHash
+            if (brojAccountova==0) {
+                AppDatabase.getInstance(context).kvizDao().obrisiSve()
+                AppDatabase.getInstance(context).grupaDao().obrisiSve()
+                AppDatabase.getInstance(context).predmetDao().obrisiSve()
+                AppDatabase.getInstance(context).odgovorDao().obrisiSve()
+                AppDatabase.getInstance(context).accountDao().dodajAccount(Account(acHash, Date().toString()))
+                //AccountRepository.dodajAccount(context,acHash,Date())
+            }
+            else {
+                AppDatabase.getInstance(context).accountDao().obrisiSve()
+                AppDatabase.getInstance(context).kvizDao().obrisiSve()
+                AppDatabase.getInstance(context).grupaDao().obrisiSve()
+                AppDatabase.getInstance(context).predmetDao().obrisiSve()
+                AppDatabase.getInstance(context).odgovorDao().obrisiSve()
+                //AccountRepository.deleteAccount(context)
+                AppDatabase.getInstance(context).accountDao().dodajAccount(Account(acHash, Date().toString()))
+                //AccountRepository.insertAccount(context,acHash,Date())
+            }
+            return true
+        }
+
+        /*suspend fun postaviHash(acHash: String): Boolean {
             return withContext(Dispatchers.IO) {
                 val db = AppDatabase.getInstance(context)
                 val brojAccountova = db.accountDao().getBrojAccountova()
@@ -53,8 +79,11 @@ class AccountRepository {
 
                 return@withContext true
             }
-        }
+        }*/
 
-        fun getHash(): String = acHash
+        suspend fun getHash(): String {
+            // return AppDatabase.getInstance(context).accountDao().getTrenutniAccount().acHash
+            return acHash
+        }
     }
 }
