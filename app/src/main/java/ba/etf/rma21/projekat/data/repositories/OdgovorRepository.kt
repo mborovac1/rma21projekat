@@ -7,6 +7,7 @@ import ba.etf.rma21.projekat.viewmodel.PitanjeKvizViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
+import kotlin.math.roundToInt
 
 class OdgovorRepository {
     companion object {
@@ -43,7 +44,10 @@ class OdgovorRepository {
             return withContext(Dispatchers.IO) {
                 val db = AppDatabase.getInstance(context)
 
-                val mojiOdgovori = db.odgovorDao().getMojiOdgovoriZaKvizTaken(idKvizTaken)
+                val kvizTaken = TakeKvizRepository.getKvizTakenById(idKvizTaken)!!
+
+                val mojiOdgovori = db.odgovorDao().getMojiOdgovoriZaKviz(kvizTaken.KvizId)
+                //val mojiOdgovori = OdgovorRepository.getOdgovoriKviz(kvizTaken.id)
 
                 var nadjen: Boolean = false
                 for (odg in mojiOdgovori) {
@@ -55,12 +59,28 @@ class OdgovorRepository {
 
                 if (!nadjen) {
                     val id = Odgovor.ID
-                    var odgovor = Odgovor(id, odgovor, idKvizTaken, idPitanje)
+                    var odgovor = Odgovor(id, odgovor, idKvizTaken, idPitanje, kvizTaken.KvizId)
                     db.odgovorDao().dodajOdgovor(odgovor)
                     Odgovor.ID = Odgovor.ID + 1
                 }
 
-                return@withContext 50 // izračunati fino postotak
+                val pitanjaZaKviz = PitanjeKvizRepository.getPitanja(kvizTaken.KvizId)!!
+                val mojiOdgovoriNakonUpisa = db.odgovorDao().getMojiOdgovoriZaKviz(kvizTaken.KvizId)
+                //val mojiOdgovoriNakonUpisa = OdgovorRepository.getOdgovoriKviz(kvizTaken.KvizId)
+
+                var brojTacnihOdgovora = 0
+                for (pitanje in pitanjaZaKviz) {
+                    for (odg in mojiOdgovoriNakonUpisa) {
+                        if (odg.idPitanja == pitanje.id) {
+                            brojTacnihOdgovora = brojTacnihOdgovora + 1
+                        }
+                    }
+                }
+
+                val prosjek =
+                    (((brojTacnihOdgovora.toDouble() * 100) / pitanjaZaKviz.size.toDouble())).roundToInt()
+
+                return@withContext prosjek // izračunati fino postotak
             }
         }
 

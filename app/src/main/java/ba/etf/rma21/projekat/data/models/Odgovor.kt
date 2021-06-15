@@ -7,10 +7,11 @@ import com.google.gson.annotations.SerializedName
 
 @Entity
 data class Odgovor(
-    @PrimaryKey @SerializedName("id") var id: Int?,
+    @PrimaryKey @SerializedName("id") var id: Int,
     @ColumnInfo(name = "odgovoreno") @SerializedName("odgovoreno") var odgovoreno: Int,
-    @SerializedName("KvizTakenId") var idKvizTakena: Int,
-    @SerializedName("PitanjeId") var idPitanja: Int
+    @ColumnInfo(name = "KvizTakenId") @SerializedName("KvizTakenId") var idKvizTakena: Int,
+    @ColumnInfo(name = "PitanjeId") @SerializedName("PitanjeId") var idPitanja: Int,
+    @ColumnInfo(name = "KvizId") val idKviza: Int
 ) {
     companion object {
         var ID: Int = 0

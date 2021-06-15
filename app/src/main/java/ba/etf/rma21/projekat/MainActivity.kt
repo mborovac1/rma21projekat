@@ -70,6 +70,10 @@ class MainActivity : AppCompatActivity() {
             GlobalScope.launch(Dispatchers.Main) {
                 accountViewModel.postaviHash(payload)
             }
+        } else {
+            GlobalScope.launch(Dispatchers.Main) {
+                accountViewModel.postaviHash("31b01a25-4476-47b0-9418-c34fc2be4bba")
+            }
         }
 
         bottomNavigation = findViewById(R.id.bottomNav)
